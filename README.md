@@ -33,10 +33,13 @@ docker-compose up -d # 개발 환경 도커 셋팅
 
 - main : 배포 stage
    - `prgrms-be-devcourse/BEDV1_Ddaangn`의 `main` 브랜치, `develop` 브랜치에서 배포를 위해 소스코드를 저장하는 브랜치
+ 
 - develop : 테스트/개발 stage
    - `prgrms-be-devcourse/BEDV1_Ddaangn`의 `develop` 브랜치, `feature/도메인`의 소스코드를 Pull Request을 통해 리뷰어 2명 이상의 허락을 받아야 하는 저장되는 브랜치
+ 
 - hotfix : 배포 진행 후 발생한 버그를 수정해야 할 때 사용
    - `prgrms-be-devcourse/BEDV1_Ddaangn`의 `hotfix` 브랜치, main에 올라온 소스코드를 배포한 이후에 생기는 문제를 해결하기 위한 브랜치
+  
 - feature : 기능 추가 브랜치
    - `prgrms-be-devcourse/BEDV1_Ddaangn`의 `feature/user`, `feature/post`처럼 자신이 담당하는 도메인으로 브랜치를 생성하고, 개인 로컬 환경에서 개발한 소스코드를 저장하기 위한 브랜치
 
