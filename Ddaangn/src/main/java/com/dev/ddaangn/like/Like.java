@@ -13,19 +13,18 @@ import javax.persistence.*;
 @Getter
 @Entity(name = "likes")
 @DynamicUpdate
-@MappedSuperclass
 public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user", referencedColumnName = "id")
     private User user;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post", referencedColumnName = "id")
     private Post post;
 }

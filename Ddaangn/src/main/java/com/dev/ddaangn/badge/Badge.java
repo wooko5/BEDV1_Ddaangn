@@ -21,14 +21,14 @@ public class Badge extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="name",nullable = false,length = 30)
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
 
-    @Column(name="description",length = 200)
+    @Column(name = "description", length = 200)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id",referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
 }

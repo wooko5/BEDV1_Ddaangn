@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mysql:
+      image: mysql:5.7
+      platform: linux/arm64
+      container_name: dev-ddaangn
+      hostname: root
+      restart: always
+      ports:
+        - "11002:3306"
+      networks:
+        - dev-ddaangn
+      environment:
+        TZ: Asia/Seoul
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: ddaangn
+        MYSQL_USER: dev
+        MYSQL_PASSWORD: dev
+      command:
+        - --character-set-server=utf8mb4
+        - --collation-server=utf8mb4_unicode_ci
+        - --skip-character-set-client-handshake
+      volumes:
+        - dev-ddaangn:/var/lib/mysql
+
+volumes:
+  dev-ddaangn:
+
+networks:
+  dev-ddaangn:
+    driver: bridge
