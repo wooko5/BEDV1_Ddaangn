@@ -1,16 +1,21 @@
-package com.dev.ddaangn.post;
+package com.dev.ddaangn.post.domain;
 
 import com.dev.ddaangn.common.BaseEntity;
+import com.dev.ddaangn.post.converter.PostStatusAttributeConverter;
 import com.dev.ddaangn.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Entity(name = "posts")
 @DynamicUpdate
+@Builder
 public class Post extends BaseEntity {
 
     @Id
@@ -23,9 +28,11 @@ public class Post extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT")
     private String contents;
 
-    //TODO, Enum형식으로 만들기
-    private String status;
+    @Convert(converter = PostStatusAttributeConverter.class)
+    @Column(name = "status", nullable = false)
+    private PostStatus status;
 
+    @Column(name = "views", nullable = false)
     private Long views;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -35,4 +42,9 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "buyer_id", referencedColumnName = "id")
     private User buyer;
+
+    public void addPost(User user) {
+        this.seller = user;
+        user.getSoldPosts().addPost(this);
+    }
 }
