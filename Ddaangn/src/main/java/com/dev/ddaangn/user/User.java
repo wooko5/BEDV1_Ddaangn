@@ -4,7 +4,11 @@ package com.dev.ddaangn.user;
 import com.dev.ddaangn.badge.Badge;
 import com.dev.ddaangn.evaluation.Evaluation;
 import com.dev.ddaangn.like.Like;
-import com.dev.ddaangn.post.Post;
+import com.dev.ddaangn.post.domain.Post;
+import com.dev.ddaangn.user.vo.BoughtPosts;
+import com.dev.ddaangn.user.vo.SoldPosts;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,10 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Entity(name = "users")
 @DynamicUpdate
-public class User {
+@Builder
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,12 +56,12 @@ public class User {
     private List<Evaluation> givingEvaluations = new ArrayList<>();
 
     // User - Post, seller
-    @OneToMany(mappedBy = "seller")
-    private List<Post> soldPosts = new ArrayList<>();
+    @Embedded
+    private SoldPosts soldPosts;
 
     // User - Post, buyer
-    @OneToMany(mappedBy = "buyer")
-    private List<Post> boughtPosts = new ArrayList<>();
+    @Embedded
+    private BoughtPosts boughtPosts;
 
     // User - Like
     @OneToMany(mappedBy = "user")
