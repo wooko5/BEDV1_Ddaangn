@@ -29,6 +29,9 @@ public class Badge extends BaseEntity {
     @Column(name = "description", length = 200)
     private String description;
 
+    @Column(name = "achievement")
+    private boolean achievement;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
