@@ -1,7 +1,7 @@
 package com.dev.ddaangn.like;
 
 
-import com.dev.ddaangn.post.Post;
+import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
