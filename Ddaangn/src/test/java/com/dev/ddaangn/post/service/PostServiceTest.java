@@ -4,6 +4,7 @@ import com.dev.ddaangn.post.converter.PostConverter;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.repository.PostRepository;
 import com.dev.ddaangn.user.User;
@@ -17,8 +18,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -100,5 +106,41 @@ class PostServiceTest {
         verify(postConverter).insertRequestDtoToEntity(givenRequest, user);
         verify(userRepository).findById(givenRequest.getSellerId());
         verify(postRepository).save(postStub);
+    }
+
+    @Test
+    @DisplayName("Post 리스트를 조회할 수 있다.")
+    void testFindAll() {
+        // GIVEN
+        final int GIVEN_PAGE = 0;
+        final int GIVEN_SIZE = 2;
+        Pageable givenPageable = PageRequest.of(GIVEN_PAGE, GIVEN_SIZE);
+        List<Post> posts = List.of(
+                Post.builder()
+                        .title("Test Title 1")
+                        .contents("Test contents 1")
+                        .status(PostStatus.SELLING)
+                        .views(INIT_POST_VIEWS)
+                        .seller(user)
+                        .build(),
+                Post.builder()
+                        .title("Test Title 2")
+                        .contents("Test contents 2")
+                        .status(PostStatus.SELLING)
+                        .views(INIT_POST_VIEWS)
+                        .seller(user)
+                        .build()
+        );
+        Page<Post> stubPosts = new PageImpl<>(posts);
+        Page<PostDetailResponse> stubPostResponses = stubPosts.map(PostDetailResponse::new);
+        when(postRepository.findAll(givenPageable)).thenReturn(stubPosts);
+
+        // WHEN
+        Page<PostDetailResponse> result = postService.findAll(givenPageable);
+
+        // THEN
+        assertThat(result.getTotalElements()).isEqualTo(stubPostResponses.getTotalElements());
+        assertThat(result.getTotalPages()).isEqualTo(stubPostResponses.getTotalPages());
+        verify(postRepository).findAll(givenPageable);
     }
 }
