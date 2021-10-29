@@ -1,5 +1,6 @@
 package com.dev.ddaangn.image.service;
 
+import com.dev.ddaangn.image.Image;
 import com.dev.ddaangn.image.repository.ImageRepository;
 import com.dev.ddaangn.image.dto.ImageDto;
 import javassist.NotFoundException;
@@ -34,7 +35,7 @@ class ImageServiceTest {
         // Given
         ImageDto imageDto = ImageDto.builder()
                 .id(id)
-                .url("C:/Users/wooko/desktop/image-20211004165424872.png")
+                .url("C:/desktop/image-20211004165424872.png")
                 .type("BADGE")
                 .build();
 
@@ -77,16 +78,21 @@ class ImageServiceTest {
     }
 
 
-//    @Test
-//    @DisplayName("수정 작업을 테스트합니다.")
-//    void updateTest() {
-//        // Given
-//
-//
-//        // When
-//
-//        // Then
-//    }
+    @Test
+    @DisplayName("수정 작업을 테스트합니다.")
+    void updateTest() throws NotFoundException {
+        // Given
+        String url = "C:/desktop/image-2000.png";
+        String type = "AVATAR";
+
+        // When
+        ImageDto updatedImageDto = imageService.update(id, url, type);
+
+        // Then
+        assertThat(updatedImageDto.getId()).isEqualTo(id);
+        assertThat(updatedImageDto.getUrl()).isEqualTo(url);
+        assertThat(updatedImageDto.getType()).isEqualTo(type);
+    }
 
 
 
