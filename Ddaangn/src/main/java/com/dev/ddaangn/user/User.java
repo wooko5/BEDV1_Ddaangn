@@ -1,20 +1,19 @@
 package com.dev.ddaangn.user;
 
 
+import com.dev.ddaangn.common.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
 @Entity(name = "users")
 @DynamicUpdate
-public class User implements Serializable {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,34 +28,20 @@ public class User implements Serializable {
     @Column
     private String picture;
 
-    @Column
-    private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
-    @Column
-    private String principal;
 
-//    @Column
-//    @Enumerated(EnumType.STRING)
-//    private SocialType socialType;
+    @Builder
+    public User(String name, String email, String picture, Role role) {
+        this.name = name;
+        this.email = email;
+        this.picture=picture;
+        this.role=role;
+    }
 
-    @Column
-    private LocalDateTime createdDate;
 
-    @Column
-    private LocalDateTime updatedDate;
-
-//    @Builder
-//    public User(String name, String password, String email, String principal,
-//                SocialType socialType, LocalDateTime createdDate, LocalDateTime updatedDate) {
-//        this.name = name;
-//        this.password = password;
-//        this.email = email;
-//        this.principal = principal;
-//        this.socialType = socialType;
-//
-//        this.createdDate = createdDate;
-//        this.updatedDate = updatedDate;
-//    }
 
     public User update(String name, String picture){
         this.name = name;
@@ -65,7 +50,9 @@ public class User implements Serializable {
         return this;
     }
 
-
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
 
     private Double temperature;
 
@@ -98,4 +85,6 @@ public class User implements Serializable {
 //    // User - Like
 //    @OneToMany(mappedBy = "user")
 //    private List<Like> likes = new ArrayList<>();
+
+
 }
