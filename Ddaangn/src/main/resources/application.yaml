@@ -4,6 +4,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: dev
     password: dev
+
+
   jpa:
     generate-ddl: true
     database: mysql
@@ -14,6 +16,26 @@ spring:
         hbm2ddl:
           query.in_clause_parameter_padding: true
           auto: create
+
+  thymeleaf:
+    cache: false
+    check-template-location: true
+    suffix: .html
+    prefix: file:src/main/resources/templates/
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 874015775526-hs42fdqusauma42sk0gijau983jvvq4t.apps.googleusercontent.com
+            client-secret: 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
+
+          kakao:
+            client-id: dce1233013b2d533befde5995c122c42
+
+
+
 
 server:
   servlet:

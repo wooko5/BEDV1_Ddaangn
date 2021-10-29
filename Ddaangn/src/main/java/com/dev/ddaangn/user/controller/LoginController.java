@@ -1,7 +1,6 @@
 package com.dev.ddaangn.user.controller;
 
 import com.dev.ddaangn.user.User;
-import com.dev.ddaangn.user.config.SocialUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -28,7 +27,7 @@ public class LoginController {
     }
 
     @GetMapping("/loginSuccess")
-    public String loginComplete(@SocialUser User user) {
+    public String loginComplete(User user) {
         return "redirect:/board";
     }
 }
