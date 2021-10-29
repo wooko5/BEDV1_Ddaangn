@@ -34,7 +34,7 @@ public class ImageService {
     public ImageDto update(Long id, String url, String type) throws NotFoundException {
         Optional<Image> image = imageRepository.findById(id);
         if (image.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.NOT_EXIST_POST.message());
+            throw new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE.message());
         }
         Image entity = image.get();
         entity.setUrl(url);
@@ -48,7 +48,7 @@ public class ImageService {
         // 2. imageRepository.findById(id) -> 조회 (영속화된 엔티티)
         return imageRepository.findById(id)
                 .map(imageConverter::converterImageDto) // 3. entity -> dto
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_POST.message()));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE.message()));
     }
 
     @Transactional
@@ -58,7 +58,10 @@ public class ImageService {
     }
 
     @Transactional
-    public void deleteOneById(Long id) {
+    public void deleteOneById(Long id) throws NotFoundException {
+        if(imageRepository.findAll().isEmpty()){
+            throw new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE.message());
+        }
         imageRepository.deleteById(id);
     }
 
