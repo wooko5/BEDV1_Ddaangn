@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 public class ImageConverter {
 
     public Image converterImage(ImageDto imageDto) { // ImageDto -> Image
-        Image image = new Image();
-        image.setId(imageDto.getId());
-        image.setUrl(imageDto.getUrl());
-        image.setType(imageDto.getType());
-        return image;
+        return Image.builder()
+                .id(imageDto.getId())
+                .url(imageDto.getUrl())
+                .type(imageDto.getType())
+                .build();
     }
 
     public ImageDto converterImageDto(Image image) { // Image -> ImageDto
