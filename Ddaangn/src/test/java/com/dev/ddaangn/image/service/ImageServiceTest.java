@@ -30,18 +30,15 @@ class ImageServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Given
-        ImageDto imageDto = ImageDto.builder()
+        ImageDto imageDto = ImageDto.builder() // Given
                 .id(id)
                 .url("C:/desktop/image-20211004165424872.png")
                 .type("BADGE")
                 .build();
 
-        // When
-        Long savedId = imageService.save(imageDto);
+        Long savedId = imageService.save(imageDto); // When
 
-        // Then
-        assertThat(savedId).isEqualTo(id);
+        assertThat(savedId).isEqualTo(id); // Then
     }
 
     @AfterEach
@@ -52,42 +49,33 @@ class ImageServiceTest {
     @Test
     @DisplayName("단일 조회를 테스트합니다.")
     void findByIdTest() throws NotFoundException {
-        // Given
-        Long imageId = id;
+        Long imageId = id; // Given
 
-        // When
-        ImageDto imageDto = imageService.findOneById(imageId);
+        ImageDto imageDto = imageService.findOneById(imageId); // When
 
-        // Then
-        assertThat(imageDto.getId()).isEqualTo(id);
+        assertThat(imageDto.getId()).isEqualTo(id); // Then
     }
 
     @Test
     @DisplayName("전체 조회를 테스트합니다.")
     void findAllTest() {
-        // Given
-        PageRequest pageRequest = PageRequest.of(0, 10);
+        PageRequest pageRequest = PageRequest.of(0, 10); // Given
 
-        // When
-        Page<ImageDto> all = imageService.findAll(pageRequest);
+        Page<ImageDto> all = imageService.findAll(pageRequest); // When
 
-        // Then
-        assertThat(all.getTotalElements()).isEqualTo(id);
+        assertThat(all.getTotalElements()).isEqualTo(id); // Then
     }
 
 
     @Test
     @DisplayName("수정 작업을 테스트합니다.")
     void updateTest() throws NotFoundException {
-        // Given
-        String url = "C:/desktop/image-2000.png";
+        String url = "C:/desktop/image-2000.png"; // Given
         String type = "AVATAR";
 
-        // When
-        ImageDto updatedImageDto = imageService.update(id, url, type);
-
-        // Then
-        assertThat(updatedImageDto.getId()).isEqualTo(id);
+        ImageDto updatedImageDto = imageService.update(id, url, type); // When
+        
+        assertThat(updatedImageDto.getId()).isEqualTo(id); // Then
         assertThat(updatedImageDto.getUrl()).isEqualTo(url);
         assertThat(updatedImageDto.getType()).isEqualTo(type);
     }
