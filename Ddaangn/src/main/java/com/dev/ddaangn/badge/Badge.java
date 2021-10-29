@@ -14,10 +14,10 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Builder
 @Entity(name = "badges")
 @DynamicUpdate
 public class Badge extends BaseEntity {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
