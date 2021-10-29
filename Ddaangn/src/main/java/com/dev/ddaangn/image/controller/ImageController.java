@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value = "/api/v1/images")
 public class ImageController {
 
     private final ImageService imageService;
@@ -25,28 +26,28 @@ public class ImageController {
     }
 
 
-    @GetMapping("/api/v1/images/{id}") // 이미지 단건 조회
+    @GetMapping("/{id}") // 이미지 단건 조회
     public ApiResponse<ImageDto> getOne(@PathVariable Long id) throws NotFoundException {
         ImageDto imageDto = imageService.findOneById(id);
         return ApiResponse.ok(imageDto);
     }
 
     // 이미지 작성
-    @PostMapping("/api/v1/images") // 게시글 생성
+    @PostMapping("/") // 게시글 생성
     public ApiResponse<Long> save(@RequestBody ImageDto imageDto) {
         Long id = imageService.save(imageDto);
         return ApiResponse.ok(id);
     }
 
     // 이미지 수정
-    @PutMapping("/api/v1/images/{id}")
+    @PutMapping("/{id}")
     public ApiResponse<ImageDto> update(@RequestBody ImageDto imageDto) throws NotFoundException {
         ImageDto updatedImage = imageService.update(imageDto.getId(), imageDto.getUrl(), imageDto.getType());
         return ApiResponse.ok(updatedImage);
     }
 
     // 이미지 삭제
-    @DeleteMapping("/api/v1/images/{id}")
+    @DeleteMapping("/{id}")
     public ApiResponse<Long> delete(@PathVariable Long id) throws NotFoundException {
         imageService.deleteOneById(id);
         return ApiResponse.ok(id);
