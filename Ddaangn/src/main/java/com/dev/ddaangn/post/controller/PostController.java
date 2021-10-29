@@ -23,18 +23,6 @@ public class PostController {
         this.postService = postService;
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiResponse<ErrorMessage> notFoundHandler(NotFoundException exception) {
-        return ApiResponse.fail(ErrorMessage.of(exception.getMessage()));
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse<String> internalServerHandler(NotFoundException exception) {
-        return ApiResponse.fail(exception.getMessage());
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PostInsertResponse> insert(@RequestBody PostInsertRequest request) {
