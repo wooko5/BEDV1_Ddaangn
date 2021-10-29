@@ -41,7 +41,7 @@ public class ImageController {
     // 이미지 수정
     @PutMapping("/api/v1/images/{id}")
     public ApiResponse<ImageDto> update(@RequestBody ImageDto imageDto) throws NotFoundException {
-        ImageDto updatedImage = imageService.update(imageDto);
+        ImageDto updatedImage = imageService.update(imageDto.getId(), imageDto.getUrl(), imageDto.getType());
         return ApiResponse.ok(updatedImage);
     }
 
