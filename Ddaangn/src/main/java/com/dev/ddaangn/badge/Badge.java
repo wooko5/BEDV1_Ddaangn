@@ -6,6 +6,7 @@ import com.dev.ddaangn.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 @Entity(name = "badges")
 @DynamicUpdate
