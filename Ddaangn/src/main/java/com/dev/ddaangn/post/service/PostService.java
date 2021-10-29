@@ -49,5 +49,4 @@ public class PostService {
         return postRepository.findAll(pageable)
                 .map(PostDetailResponse::new);
     }
-
 }
