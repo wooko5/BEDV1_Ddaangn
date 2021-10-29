@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 @DynamicUpdate
 @Entity(name = "images")
