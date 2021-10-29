@@ -17,7 +17,6 @@ import java.util.Optional;
 public class ImageService {
     private final ImageRepository imageRepository;
     private final ImageConverter imageConverter;
-    private ErrorMessage errorMessage;
 
     public ImageService(ImageRepository imageRepository, ImageConverter imageConverter) {
         this.imageRepository = imageRepository;
@@ -32,16 +31,15 @@ public class ImageService {
     }
 
     @Transactional
-    public ImageDto update(ImageDto imageDto) throws NotFoundException {
-        Optional<Image> image = imageRepository.findById(imageDto.getId());
+    public ImageDto update(Long id, String url, String type) throws NotFoundException {
+        Optional<Image> image = imageRepository.findById(id);
         if (image.isEmpty()) {
             throw new NotFoundException(ErrorMessage.NOT_EXIST_POST.message());
         }
-        image.get().setId(imageDto.getId());
-        image.get().setUrl(imageDto.getUrl());
-        image.get().setType(imageDto.getType());
-        Image updatedImage = imageRepository.save(image.get());
-        return imageConverter.converterImageDto(updatedImage);
+        Image entity = image.get();
+        entity.setUrl(url);
+        entity.setType(type);
+        return imageConverter.converterImageDto(entity);
     }
 
     @Transactional
