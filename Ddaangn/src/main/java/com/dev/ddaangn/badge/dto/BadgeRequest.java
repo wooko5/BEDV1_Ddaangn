@@ -12,4 +12,5 @@ public class BadgeRequest {
     private String name;
     private String description;
     private List<BadgeImage> badgeImages;
+    private Long userId;
 }
