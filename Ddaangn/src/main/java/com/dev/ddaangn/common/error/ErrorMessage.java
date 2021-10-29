@@ -14,7 +14,8 @@ public enum ErrorMessage {
     NOT_EXIST_POST("존재하지 않는 게시글 입니다."),
     INVALID_IMAGE_URL("이미지의 URL 형식이 맞지 않습니다."),
     INVALID_IMAGE_TYPE("이미지의 종류 형식이 맞지 않습니다."),
-    NOT_EXIST_IMAGE("존재하지 않는 이미지 입니다"),
+    NOT_EXIST_IMAGE("존재하지 않는 이미지입니다"),
+    NOT_EXIST_BADGE("존재하지 않는 배지입니다"),
     UNSUPPORTED_MEDIA_TYPE("지원하지 않는 미디어 타입입니다.");
 
     private final String message;
