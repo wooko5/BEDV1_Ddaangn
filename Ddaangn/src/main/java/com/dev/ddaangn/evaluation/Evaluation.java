@@ -1,6 +1,6 @@
 package com.dev.ddaangn.evaluation;
 
-import com.dev.ddaangn.post.Post;
+import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.common.BaseEntity;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.dev.ddaangn.evaluation.*;
 
 @NoArgsConstructor
 @Getter
