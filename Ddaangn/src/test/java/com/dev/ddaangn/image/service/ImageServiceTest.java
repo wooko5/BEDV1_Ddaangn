@@ -1,6 +1,5 @@
 package com.dev.ddaangn.image.service;
 
-import com.dev.ddaangn.image.Image;
 import com.dev.ddaangn.image.repository.ImageRepository;
 import com.dev.ddaangn.image.dto.ImageDto;
 import javassist.NotFoundException;
@@ -13,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 @Slf4j
 @SpringBootTest
@@ -31,7 +29,7 @@ class ImageServiceTest {
     private Long id = 1L;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         // Given
         ImageDto imageDto = ImageDto.builder()
                 .id(id)
@@ -47,7 +45,7 @@ class ImageServiceTest {
     }
 
     @AfterEach
-    void cleanUp(){
+    void cleanUp() {
         imageRepository.deleteAll();
     }
 
@@ -94,7 +92,10 @@ class ImageServiceTest {
         assertThat(updatedImageDto.getType()).isEqualTo(type);
     }
 
-
-
-
+    @Test
+    @DisplayName("삭제 작업을 테스트합니다.")
+    void deleteTest() throws NotFoundException {
+        imageService.deleteOneById(id);
+        assertThat(imageRepository.findAll()).isEmpty();
+    }
 }
