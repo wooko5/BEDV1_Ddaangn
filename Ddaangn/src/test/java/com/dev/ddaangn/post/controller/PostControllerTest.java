@@ -3,6 +3,7 @@ package com.dev.ddaangn.post.controller;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.service.PostService;
 import com.dev.ddaangn.user.User;
@@ -18,6 +19,8 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +28,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -117,7 +121,50 @@ class PostControllerTest {
                                 fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
                                 fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
                                 fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
-                            )
-                        ));
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("[GET] '/api/v1/posts'")
+    void testGetAllCall() throws Exception {
+        // GIVEN
+        final int PARAM_SIZE = 3;
+        final int PARAM_PAGE = 0;
+        Page<PostDetailResponse> stubResponses = new PageImpl<>(
+                List.of(
+                        new PostDetailResponse(
+                                Post.builder()
+                                        .title("Test Title 1")
+                                        .contents("Test contents 1")
+                                        .status(PostStatus.SELLING)
+                                        .views(INIT_POST_VIEWS)
+                                        .seller(user)
+                                        .build()
+                        ),
+                        new PostDetailResponse(
+                                Post.builder()
+                                        .title("Test Title 2")
+                                        .contents("Test contents 2")
+                                        .status(PostStatus.SELLING)
+                                        .views(INIT_POST_VIEWS)
+                                        .seller(user)
+                                        .build()
+                        )
+                )
+        );
+
+        given(postService.findAll(any())).willReturn(stubResponses);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/posts")
+                .param("page", String.valueOf(PARAM_PAGE))
+                .param("size", String.valueOf(PARAM_SIZE))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // WHEN
+        // THEN
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print());
+        // TODO: REST-DOCS 문서화 작업
     }
 }
