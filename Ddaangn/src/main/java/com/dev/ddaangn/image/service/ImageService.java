@@ -59,11 +59,9 @@ public class ImageService {
 
     @Transactional
     public void deleteOneById(Long id) throws NotFoundException {
-        if(imageRepository.findAll().isEmpty()){
+        if (imageRepository.findAll().isEmpty()) {
             throw new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE.message());
         }
         imageRepository.deleteById(id);
     }
-
-
 }
