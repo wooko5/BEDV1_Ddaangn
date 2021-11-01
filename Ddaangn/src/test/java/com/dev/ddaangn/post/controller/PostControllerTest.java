@@ -86,7 +86,7 @@ class PostControllerTest {
     void testInsertCall() throws Exception {
         // GIVEN
         PostInsertRequest givenRequest = PostInsertRequest.builder()
-                .content("test content")
+                .contents("test content")
                 .title("test title")
                 .sellerId(user.getId())
                 .build();

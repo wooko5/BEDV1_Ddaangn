@@ -5,6 +5,7 @@ import com.dev.ddaangn.post.converter.PostConverter;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.repository.PostRepository;
@@ -69,13 +70,13 @@ class PostServiceTest {
     void testInsert() {
         // GIVEN
         PostInsertRequest givenRequest = PostInsertRequest.builder()
-                .content("test content")
+                .contents("test content")
                 .title("test title")
                 .sellerId(user.getId())
                 .build();
         Post postStub = Post.builder()
                 .title(givenRequest.getTitle())
-                .contents(givenRequest.getContent())
+                .contents(givenRequest.getContents())
                 .status(PostStatus.SELLING)
                 .views(INIT_POST_VIEWS)
                 .seller(user)
@@ -83,7 +84,7 @@ class PostServiceTest {
         Post insertedPostStub = Post.builder()
                 .id(POST_ID)
                 .title(givenRequest.getTitle())
-                .contents(givenRequest.getContent())
+                .contents(givenRequest.getContents())
                 .status(PostStatus.SELLING)
                 .views(INIT_POST_VIEWS)
                 .seller(user)
@@ -180,5 +181,46 @@ class PostServiceTest {
 
         // WHEN // THEN
         assertThatThrownBy(() -> postService.findById(POST_ID)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Post를 수정할 수 있다.")
+    void testUpdate() {
+        PostUpdateRequest givenRequest = PostUpdateRequest.builder()
+                .contents("수정 컨텍스트")
+                .title("수정된 제목")
+                .build();
+        Post stubOriginPostEntity = Post.builder()
+                .id(POST_ID)
+                .title("test title")
+                .contents("test contents")
+                .status(PostStatus.SELLING)
+                .views(INIT_POST_VIEWS)
+                .seller(user)
+                .build();
+        stubOriginPostEntity.setCreatedAt(LocalDateTime.now());
+        stubOriginPostEntity.setUpdateAt(LocalDateTime.now());
+
+        Post stubUpdatedPostEntity = Post.builder()
+                .id(stubOriginPostEntity.getId())
+                .title(givenRequest.getTitle())
+                .contents(givenRequest.getContents())
+                .status(stubOriginPostEntity.getStatus())
+                .views(stubOriginPostEntity.getViews())
+                .seller(stubOriginPostEntity.getSeller())
+                .build();
+        stubOriginPostEntity.setCreatedAt(stubOriginPostEntity.getCreatedAt());
+        stubOriginPostEntity.setUpdateAt(stubOriginPostEntity.getUpdateAt());
+
+        PostDetailResponse stubResponseDto = new PostDetailResponse(stubUpdatedPostEntity);
+        when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
+
+        // WHEN
+        PostDetailResponse result = postService.update(POST_ID, givenRequest);
+
+        // THEN
+        assertThat(result).isEqualTo(stubResponseDto);
+        verify(postRepository).findById(POST_ID);
+
     }
 }
