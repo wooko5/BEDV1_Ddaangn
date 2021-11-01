@@ -1,6 +1,6 @@
 package com.dev.ddaangn.user.config.auth;
 
-import com.dev.ddaangn.user.Role;
+import com.dev.ddaangn.user.role.LoginRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll()
                      .antMatchers("/api/v1/**").permitAll() // .hasRole(Role.USER.name()).anyRequest().authenticated()
-                    .antMatchers("/api/v1/users/**").hasRole(Role.USER.name()).anyRequest().authenticated()
+                    .antMatchers("/api/v1/users/**").hasRole(LoginRole.USER.name()).anyRequest().authenticated()
                 .and()
                     .logout()
                         .logoutSuccessUrl("/")

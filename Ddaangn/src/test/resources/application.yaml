@@ -21,8 +21,6 @@ spring:
     include: oauth
 
 
-
-
 server:
   servlet:
     encoding:
