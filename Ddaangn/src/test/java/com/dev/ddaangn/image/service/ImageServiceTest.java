@@ -70,9 +70,7 @@ class ImageServiceTest {
     void updateTest() throws NotFoundException {
         String url = "C:/desktop/image-2000.png"; // Given
         String type = "AVATAR";
-
         ImageDto updatedImageDto = imageService.update(id, url, type); // When
-
         assertThat(updatedImageDto.getId()).isEqualTo(id); // Then
         assertThat(updatedImageDto.getUrl()).isEqualTo(url);
         assertThat(updatedImageDto.getType()).isEqualTo(type);
