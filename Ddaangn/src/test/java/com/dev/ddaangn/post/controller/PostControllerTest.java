@@ -3,8 +3,8 @@ package com.dev.ddaangn.post.controller;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
-import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.service.PostService;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.vo.BoughtPosts;
@@ -90,7 +90,7 @@ class PostControllerTest {
                 .title("test title")
                 .sellerId(user.getId())
                 .build();
-        PostInsertResponse stubResponse = new PostInsertResponse(post);
+        PostDetailResponse stubResponse = new PostDetailResponse(post);
         given(postService.insert(any())).willReturn(stubResponse);
 
         RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/posts")
@@ -104,17 +104,16 @@ class PostControllerTest {
                 .andDo(document("post-save",
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("title"),
-                                fieldWithPath("content").type(JsonFieldType.STRING).description("contents"),
+                                fieldWithPath("contents").type(JsonFieldType.STRING).description("contents"),
                                 fieldWithPath("sellerId").type(JsonFieldType.NUMBER).description("user Id")
                         ),
                         responseFields(
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("data"),
-                                fieldWithPath("data.postId").type(JsonFieldType.NUMBER).description("게시글 id"),
-                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("제목"),
-                                fieldWithPath("data.content").type(JsonFieldType.STRING).description("내용"),
-                                fieldWithPath("data.username").type(JsonFieldType.STRING).description("등록 사용자 이름"),
-                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("게시글 상태"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),
+                                fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
+                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
                                 fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
                                 fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
                                 fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
                                 fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
@@ -183,6 +182,48 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("post-get-one",
+                        responseFields(
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),
+                                fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
+                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
+                                fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
+                                fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
+                                fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
+                                fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("[PUT] '/api/v1/posts/{id}'")
+    void testUpdateCall() throws Exception {
+        // GIVEN
+        PostUpdateRequest givenRequest = PostUpdateRequest.builder()
+                .contents("update content")
+                .title("update title")
+                .build();
+
+        post.update(givenRequest);
+
+        PostDetailResponse stubResponse = new PostDetailResponse(post);
+        given(postService.update(any(), any())).willReturn(stubResponse);
+
+        RequestBuilder request = MockMvcRequestBuilders.put("/api/v1/posts/" + post.getId())
+                .contentType(MediaType.APPLICATION_JSON) // TODO: 사진 들어오면 multipart/form-data
+                .content(objectMapper.writeValueAsString(givenRequest));
+
+        // WHEN // THEN
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("post-update",
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("title"),
+                                fieldWithPath("contents").type(JsonFieldType.STRING).description("contents")
+                        ),
                         responseFields(
                                 fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
                                 fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),

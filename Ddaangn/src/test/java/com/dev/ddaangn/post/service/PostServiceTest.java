@@ -7,7 +7,6 @@ import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
-import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.repository.PostRepository;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
@@ -101,9 +100,9 @@ class PostServiceTest {
                 ))
                 .thenReturn(Optional.of(user));
         when(postRepository.save(postStub)).thenReturn(insertedPostStub);
-        PostInsertResponse givenResult = new PostInsertResponse(insertedPostStub);
+        PostDetailResponse givenResult = new PostDetailResponse(insertedPostStub);
         // WHEN
-        PostInsertResponse result = postService.insert(givenRequest);
+        PostDetailResponse result = postService.insert(givenRequest);
 
         // THEN
         assertThat(result).isEqualTo(givenResult);
