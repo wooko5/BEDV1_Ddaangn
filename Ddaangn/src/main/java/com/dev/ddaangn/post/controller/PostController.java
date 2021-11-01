@@ -2,8 +2,8 @@ package com.dev.ddaangn.post.controller;
 
 import com.dev.ddaangn.common.api.ApiResponse;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
-import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ public class PostController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<PostInsertResponse> insert(@RequestBody PostInsertRequest request) {
+    public ApiResponse<PostDetailResponse> insert(@RequestBody PostInsertRequest request) {
         return ApiResponse.ok(postService.insert(request));
     }
 
@@ -35,6 +35,11 @@ public class PostController {
     @GetMapping("/{id}")
     public ApiResponse<PostDetailResponse> getOne(@PathVariable("id") Long id) {
         return ApiResponse.ok(postService.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<PostDetailResponse> update(@PathVariable("id") Long postId, @RequestBody PostUpdateRequest request) {
+        return ApiResponse.ok(postService.update(postId, request));
     }
 
 }

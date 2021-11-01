@@ -5,9 +5,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PostInsertRequest {
-
-    private Long sellerId;
+public class PostUpdateRequest {
+    // private Long sellerId; // TODO: SessionUser에서 받기
     private String title;
     private String contents;
     // private List<Image> images;

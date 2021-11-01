@@ -2,12 +2,14 @@ package com.dev.ddaangn.post.domain;
 
 import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.post.converter.PostStatusAttributeConverter;
+import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 
 @NoArgsConstructor
@@ -46,5 +48,10 @@ public class Post extends BaseEntity {
     public void addPost(User user) {
         this.seller = user;
         user.getSoldPosts().addPost(this);
+    }
+
+    public void update(PostUpdateRequest request) {
+        contents = request.getContents();
+        title = request.getTitle();
     }
 }
