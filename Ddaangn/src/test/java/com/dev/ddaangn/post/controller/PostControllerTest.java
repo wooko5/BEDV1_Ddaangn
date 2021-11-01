@@ -238,4 +238,25 @@ class PostControllerTest {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("[DELETE] '/api/v1/posts/{id}'")
+    void testDeleteCall() throws Exception {
+        // GIVEN
+        // WHEN
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/v1/posts/" + post.getId())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // THEN
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("post-delete",
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("데이터"),
+                                fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
+                        )
+                ));
+
+    }
 }
