@@ -21,6 +21,7 @@ import javax.persistence.*;
 @Getter
 @Entity(name = "users")
 @DynamicUpdate
+@Builder
 public class User extends BaseEntity {
 
     @Id
@@ -40,6 +41,21 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private Double temperature;
+
+    private String address;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    // User - Post, seller
+    @Embedded
+    private SoldPosts soldPosts;
+
+    // User - Post, buyer
+    @Embedded
+    private BoughtPosts boughtPosts;
 
     @Builder
     public User(String name, String email, String picture, Role role) {
@@ -48,8 +64,6 @@ public class User extends BaseEntity {
         this.picture=picture;
         this.role=role;
     }
-
-
 
     public User update(String name, String picture){
         this.name = name;
@@ -62,10 +76,8 @@ public class User extends BaseEntity {
         return this.role.getKey();
     }
 
-    private Double temperature;
 
     // 연관관계 매핑
-
     // User - Badge
 //    @OneToMany(mappedBy = "user")
 //    private List<Badge> badges = new ArrayList<>();
@@ -93,13 +105,4 @@ public class User extends BaseEntity {
 //    // User - Like
 //    @OneToMany(mappedBy = "user")
 //    private List<Like> likes = new ArrayList<>();
-
-    // User - Post, seller
-    @Embedded
-    private SoldPosts soldPosts;
-
-    // User - Post, buyer
-    @Embedded
-    private BoughtPosts boughtPosts;
-
 }

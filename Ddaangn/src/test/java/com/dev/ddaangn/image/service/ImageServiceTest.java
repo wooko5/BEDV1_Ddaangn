@@ -30,15 +30,12 @@ class ImageServiceTest {
 
     @BeforeEach
     void setUp() {
-        ImageDto imageDto = ImageDto.builder() // Given
-                .id(id)
+        ImageDto imageDto = ImageDto.builder()
                 .url("C:/desktop/image-20211004165424872.png")
                 .type("BADGE")
                 .build();
 
-        Long savedId = imageService.save(imageDto); // When
-
-        assertThat(savedId).isEqualTo(id); // Then
+        id = imageService.save(imageDto);
     }
 
     @AfterEach
@@ -59,11 +56,12 @@ class ImageServiceTest {
     @Test
     @DisplayName("전체 조회를 테스트합니다.")
     void findAllTest() {
+        final Long GIVEN_TOTAL_ELEMENT = 1L;
         PageRequest pageRequest = PageRequest.of(0, 10); // Given
 
         Page<ImageDto> all = imageService.findAll(pageRequest); // When
 
-        assertThat(all.getTotalElements()).isEqualTo(id); // Then
+        assertThat(all.getTotalElements()).isEqualTo(GIVEN_TOTAL_ELEMENT); // Then
     }
 
 
