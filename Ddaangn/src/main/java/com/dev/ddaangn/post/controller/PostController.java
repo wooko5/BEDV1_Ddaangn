@@ -42,4 +42,10 @@ public class PostController {
         return ApiResponse.ok(postService.update(postId, request));
     }
 
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> delete(@PathVariable("id") Long postId) {
+        postService.delete(postId);
+        return ApiResponse.ok(null);
+    }
+
 }
