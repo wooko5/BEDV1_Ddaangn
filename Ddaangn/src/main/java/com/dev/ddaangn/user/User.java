@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -79,9 +81,9 @@ public class User extends BaseEntity {
 
     // 연관관계 매핑
     // User - Badge
-//    @OneToMany(mappedBy = "user")
-//    private List<Badge> badges = new ArrayList<>();
-//
+    @OneToMany(mappedBy = "user")
+    private List<Badge> badges = new ArrayList<>();
+
 //    // User - AvatarImage TODO, Image 상속받고 만들기
 ////    @OneToMany(mappedBy = "user")
 ////    private List<AvatarImage> avatarImages = new ArrayList<>();
