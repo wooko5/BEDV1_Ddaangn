@@ -1,4 +1,4 @@
-package com.dev.ddaangn.user.role;
+package com.dev.ddaangn.evaluation.role;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +14,8 @@ public enum EvaluationRole {
 
     private final String key;
     private final String title;
+
+
+
 
 }

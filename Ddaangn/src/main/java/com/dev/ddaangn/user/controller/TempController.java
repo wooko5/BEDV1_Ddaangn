@@ -32,7 +32,7 @@ public class TempController {
 
     // 사용자는 온도를 조회할 수 있어야 한다.
     @GetMapping("/temperature/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<TempSaveResponseDto> select(@PathVariable Long id, @LoginUser SessionUser user) {
         if (user != null) {
 //            model.addAttribute("userName", user.getName());
@@ -44,7 +44,7 @@ public class TempController {
 
 
     @GetMapping("/temperature/list")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<ListResponseDto>> findAll() {
         return ApiResponse.ok(tempService.findAll());
     }

@@ -37,7 +37,7 @@ public class TempService {
 
     @Transactional
     public TempSaveResponseDto findById(Long id) {
-        User entity=userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 유저가 없습니다. id="+id));
+        User entity=userRepository.findById(id).orElseThrow(()->new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER));
         return new TempSaveResponseDto(entity);
     }
 
