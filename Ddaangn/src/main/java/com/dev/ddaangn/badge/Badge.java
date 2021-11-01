@@ -40,7 +40,7 @@ public class Badge extends BaseEntity {
     @OneToMany(mappedBy = "badge")
     private List<BadgeImage> badgeImages = new ArrayList<>();
 
-    public void setBadge(User user) {
+    public void setUser(User user) {
         if(Objects.nonNull(this.user)){
             this.user.getBadges().remove(this);
         }
