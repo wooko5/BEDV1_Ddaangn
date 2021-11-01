@@ -2,6 +2,7 @@ package com.dev.ddaangn.user;
 
 
 import com.dev.ddaangn.badge.Badge;
+import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.evaluation.Evaluation;
 import com.dev.ddaangn.like.Like;
 import com.dev.ddaangn.post.domain.Post;
