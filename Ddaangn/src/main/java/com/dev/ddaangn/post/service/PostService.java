@@ -39,14 +39,21 @@ public class PostService {
     }
 
     @Transactional
-    public User getUser(Long userId) {
-        return userRepository.findById(userId)
+    public Page<PostDetailResponse> findAll(Pageable pageable) {
+        return postRepository.findAll(pageable)
+                .map(PostDetailResponse::new);
+    }
+
+    @Transactional
+    public PostDetailResponse findById(Long userId) {
+        return postRepository.findById(userId)
+                .map(PostDetailResponse::new)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER));
     }
 
     @Transactional
-    public Page<PostDetailResponse> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable)
-                .map(PostDetailResponse::new);
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER));
     }
 }
