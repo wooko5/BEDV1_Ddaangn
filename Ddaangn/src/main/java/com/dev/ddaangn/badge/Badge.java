@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,5 +39,13 @@ public class Badge extends BaseEntity {
 
     @OneToMany(mappedBy = "badge")
     private List<BadgeImage> badgeImages = new ArrayList<>();
+
+    public void setBadge(User user) {
+        if(Objects.nonNull(this.user)){
+            this.user.getBadges().remove(this);
+        }
+        this.user = user;
+        user.getBadges().add(this);
+    }
 
 }
