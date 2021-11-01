@@ -3,10 +3,7 @@ package com.dev.ddaangn.badge;
 
 import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -14,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Builder
-@Entity(name = "badges")
 @DynamicUpdate
+@Entity(name = "badges")
 public class Badge extends BaseEntity {
 
     @Id
