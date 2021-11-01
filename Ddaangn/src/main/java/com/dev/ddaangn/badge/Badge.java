@@ -29,7 +29,7 @@ public class Badge extends BaseEntity {
     @Column(name = "description", length = 200)
     private String description;
 
-    @Column(name = "achievement")
+    @Column(name = "achievement", nullable = false)
     private boolean achievement;
 
     @ManyToOne(fetch = FetchType.LAZY)
