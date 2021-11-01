@@ -1,7 +1,14 @@
 package com.dev.ddaangn.user;
 
 
+import com.dev.ddaangn.badge.Badge;
 import com.dev.ddaangn.common.BaseEntity;
+import com.dev.ddaangn.evaluation.Evaluation;
+import com.dev.ddaangn.like.Like;
+import com.dev.ddaangn.post.domain.Post;
+import com.dev.ddaangn.user.vo.BoughtPosts;
+import com.dev.ddaangn.user.vo.SoldPosts;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +17,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Entity(name = "users")
 @DynamicUpdate
+@Builder
 public class User extends BaseEntity {
 
     @Id
@@ -32,6 +41,21 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private Double temperature;
+
+    private String address;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    // User - Post, seller
+    @Embedded
+    private SoldPosts soldPosts;
+
+    // User - Post, buyer
+    @Embedded
+    private BoughtPosts boughtPosts;
 
     @Builder
     public User(String name, String email, String picture, Role role) {
@@ -40,8 +64,6 @@ public class User extends BaseEntity {
         this.picture=picture;
         this.role=role;
     }
-
-
 
     public User update(String name, String picture){
         this.name = name;
@@ -54,10 +76,8 @@ public class User extends BaseEntity {
         return this.role.getKey();
     }
 
-    private Double temperature;
 
     // 연관관계 매핑
-
     // User - Badge
 //    @OneToMany(mappedBy = "user")
 //    private List<Badge> badges = new ArrayList<>();
@@ -85,6 +105,4 @@ public class User extends BaseEntity {
 //    // User - Like
 //    @OneToMany(mappedBy = "user")
 //    private List<Like> likes = new ArrayList<>();
-
-
 }
