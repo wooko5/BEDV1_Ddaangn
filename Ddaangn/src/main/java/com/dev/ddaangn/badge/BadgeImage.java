@@ -9,9 +9,7 @@ import javax.persistence.*;
 @Getter
 @Entity(name = "badge_images")
 public class BadgeImage extends Image {
-
-    // BadgeImage - Badge
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // BadgeImage - Badge
     @JoinColumn(name = "badge", referencedColumnName = "id")
     private Badge badge;
 }
