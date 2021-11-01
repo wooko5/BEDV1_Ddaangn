@@ -220,6 +220,17 @@ class PostServiceTest {
         // THEN
         assertThat(result).isEqualTo(stubResponseDto);
         verify(postRepository).findById(POST_ID);
+    }
 
+    @Test
+    @DisplayName("Post를 id로 삭제할 수 있다.")
+    void testDelete() {
+        // GIVEN
+        when(postRepository.existsById(any())).thenReturn(true);
+        // WHEN
+        postService.delete(POST_ID);
+        // THEN
+        verify(postRepository).existsById(POST_ID);
+        verify(postRepository).deleteById(POST_ID);
     }
 }

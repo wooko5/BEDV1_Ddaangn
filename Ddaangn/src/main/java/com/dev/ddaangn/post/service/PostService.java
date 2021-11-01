@@ -60,6 +60,13 @@ public class PostService {
     }
 
     @Transactional
+    public void delete(Long postId) {
+        if (!postRepository.existsById(postId)) throw new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER);
+
+        postRepository.deleteById(postId);
+    }
+
+    @Transactional
     public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER));
