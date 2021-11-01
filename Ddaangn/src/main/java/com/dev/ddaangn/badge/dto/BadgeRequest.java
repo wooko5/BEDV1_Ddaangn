@@ -11,6 +11,7 @@ import java.util.List;
 public class BadgeRequest {
     private String name;
     private String description;
+    private boolean achievement;
     private List<BadgeImage> badgeImages;
     private Long userId;
 }
