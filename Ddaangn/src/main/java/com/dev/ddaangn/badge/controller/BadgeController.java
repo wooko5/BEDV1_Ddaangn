@@ -3,7 +3,6 @@ package com.dev.ddaangn.badge.controller;
 import com.dev.ddaangn.badge.dto.BadgeResponse;
 import com.dev.ddaangn.badge.service.BadgeService;
 import com.dev.ddaangn.common.api.ApiResponse;
-import com.dev.ddaangn.image.dto.ImageDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ public class BadgeController {
     }
 
     @GetMapping("/") // 배지 전체 조회
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Page<BadgeResponse>> getAll(Pageable pageable) {
         Page<BadgeResponse> all = badgeService.findAll(pageable);
         return ApiResponse.ok(all);
