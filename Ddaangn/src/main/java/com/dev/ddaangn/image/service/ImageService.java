@@ -2,10 +2,10 @@ package com.dev.ddaangn.image.service;
 
 import com.dev.ddaangn.common.error.ErrorMessage;
 import com.dev.ddaangn.image.Image;
+import com.dev.ddaangn.common.error.exception.NotFoundException;
 import com.dev.ddaangn.image.repository.ImageRepository;
 import com.dev.ddaangn.image.converter.ImageConverter;
 import com.dev.ddaangn.image.dto.ImageDto;
-import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class ImageService {
     public ImageDto update(Long id, String url, String type) throws NotFoundException {
         Optional<Image> image = imageRepository.findById(id);
         if (image.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE.message());
+            throw new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE);
         }
         Image entity = image.get();
         entity.setUrl(url);
@@ -43,12 +43,12 @@ public class ImageService {
     }
 
     @Transactional
-    public ImageDto findOneById(Long id) throws NotFoundException {
+    public ImageDto findOneById(Long id) {
         // 1. 이미지 조회를 위한 아이디를 인자로 받기
         // 2. imageRepository.findById(id) -> 조회 (영속화된 엔티티)
         return imageRepository.findById(id)
                 .map(imageConverter::converterImageDto) // 3. entity -> dto
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE.message()));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE));
     }
 
     @Transactional
@@ -60,7 +60,7 @@ public class ImageService {
     @Transactional
     public void deleteOneById(Long id) throws NotFoundException {
         if (imageRepository.findAll().isEmpty()) {
-            throw new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE.message());
+            throw new NotFoundException(ErrorMessage.NOT_EXIST_IMAGE);
         }
         imageRepository.deleteById(id);
     }
