@@ -1,5 +1,6 @@
 package com.dev.ddaangn.post.dto.response;
 
+import com.dev.ddaangn.common.dto.BaseResponse;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.domain.PostStatus;
 import lombok.Getter;
@@ -8,16 +9,17 @@ import java.util.Objects;
 
 
 @Getter
-public class PostDetailResponse {
+public class PostDetailResponse extends BaseResponse {
     private final Long id;
     private final String title;
     private final String contents;
     private final PostStatus status;
     private final Long views;
-    private final String sellerName;
     // TODO: images
+    private final String sellerName;
 
     public PostDetailResponse(Post post) {
+        super(post.getCreatedAt(), post.getUpdateAt(), post.getDeletedAt());
         this.id = post.getId();
         this.title = post.getTitle();
         this.contents = post.getContents();

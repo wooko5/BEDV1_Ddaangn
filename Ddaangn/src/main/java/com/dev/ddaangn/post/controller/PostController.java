@@ -1,8 +1,6 @@
 package com.dev.ddaangn.post.controller;
 
 import com.dev.ddaangn.common.api.ApiResponse;
-import com.dev.ddaangn.common.error.ErrorMessage;
-import com.dev.ddaangn.common.error.exception.NotFoundException;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.dto.response.PostInsertResponse;
@@ -30,8 +28,13 @@ public class PostController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Page<PostDetailResponse>> getAll(Pageable pageable) {
         return ApiResponse.ok(postService.findAll(pageable));
     }
+
+    @GetMapping("/{id}")
+    public ApiResponse<PostDetailResponse> getOne(@PathVariable("id") Long id) {
+        return ApiResponse.ok(postService.findById(id));
+    }
+
 }

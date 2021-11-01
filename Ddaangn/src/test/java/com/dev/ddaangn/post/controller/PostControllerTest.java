@@ -9,7 +9,6 @@ import com.dev.ddaangn.post.service.PostService;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -121,8 +119,8 @@ class PostControllerTest {
                                 fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
                                 fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
                                 fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
-                            )
-                        ));
+                        )
+                ));
     }
 
     @Test
@@ -166,5 +164,37 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
         // TODO: REST-DOCS 문서화 작업
+    }
+
+    @Test
+    @DisplayName("[GET] '/api/v1/posts/{id}'")
+    void testGetOneCall() throws Exception {
+        // GIVEN
+        Long givenPostId = post.getId();
+        PostDetailResponse stubResponse = new PostDetailResponse(post);
+
+        given(postService.findById(any())).willReturn(stubResponse);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/posts/" + givenPostId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+
+        // WHEN // THEN
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("post-get-one",
+                        responseFields(
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),
+                                fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
+                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
+                                fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
+                                fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
+                                fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
+                                fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
+                        )
+                ));
     }
 }
