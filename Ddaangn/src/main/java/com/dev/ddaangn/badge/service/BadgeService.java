@@ -9,23 +9,19 @@ import com.dev.ddaangn.common.error.ErrorMessage;
 import com.dev.ddaangn.common.error.exception.NotFoundException;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class BadgeService {
 
     private final BadgeRepository badgeRepository;
     private final BadgeConverter badgeConverter;
     private final UserRepository userRepository;
-
-    public BadgeService(BadgeRepository badgeRepository, BadgeConverter badgeConverter, UserRepository userRepository) {
-        this.badgeRepository = badgeRepository;
-        this.badgeConverter = badgeConverter;
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     public BadgeResponse save(BadgeRequest request) {
