@@ -7,7 +7,6 @@ import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
-import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.repository.PostRepository;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
@@ -29,14 +28,14 @@ public class PostService {
     }
 
     @Transactional
-    public PostInsertResponse insert(PostInsertRequest request) {
+    public PostDetailResponse insert(PostInsertRequest request) {
         User user = getUser(request.getSellerId());
         Post post = postConverter.insertRequestDtoToEntity(request, user);
 
         post.addPost(user);
 
         Post insertedPost = postRepository.save(post);
-        return new PostInsertResponse(insertedPost);
+        return new PostDetailResponse(insertedPost);
     }
 
     @Transactional
