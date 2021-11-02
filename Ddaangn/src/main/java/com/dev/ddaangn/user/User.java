@@ -12,6 +12,10 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import com.dev.ddaangn.user.role.LoginRole;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -76,30 +80,43 @@ public class User extends BaseEntity {
 
     // 연관관계 매핑
     // User - Badge
+    @OneToMany(mappedBy = "user")
+    private List<Badge> badges = new ArrayList<>();
+
+    // User - Evaluation, 받은 평가
+    @OneToMany(mappedBy = "evaluated",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evaluation> givenEvaluations = new ArrayList<>();
+
+    // User가 준 평가
+    @OneToMany(mappedBy = "evaluator",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evaluation> givingEvaluations = new ArrayList<>();
+
+
+    public void addEvaluated(Evaluation evaluation) {
+        givenEvaluations.add(evaluation);
+    }
+
+    public void addEvaluator(Evaluation evaluation) {
+        givingEvaluations.add(evaluation);
+    }
+
+
+
+    // User - AvatarImage TODO, Image 상속받고 만들기
 //    @OneToMany(mappedBy = "user")
-//    private List<Badge> badges = new ArrayList<>();
-//
-//    // User - AvatarImage TODO, Image 상속받고 만들기
-////    @OneToMany(mappedBy = "user")
-////    private List<AvatarImage> avatarImages = new ArrayList<>();
-//
-//    // User - Evaluation, 받은 평가
-//    @OneToMany(mappedBy = "evaluatee")
-//    private List<Evaluation> givenEvaluations = new ArrayList<>();
-//
-//    // User가 준 평가
-//    @OneToMany(mappedBy = "evaluator")
-//    private List<Evaluation> givingEvaluations = new ArrayList<>();
-//
-//    // User - Post, seller
+//    private List<AvatarImage> avatarImages = new ArrayList<>();
+
+
+
+    // User - Post, seller
 //    @OneToMany(mappedBy = "seller")
 //    private List<Post> soldPosts = new ArrayList<>();
-//
-//    // User - Post, buyer
+
+    // User - Post, buyer
 //    @OneToMany(mappedBy = "buyer")
 //    private List<Post> boughtPosts = new ArrayList<>();
-//
-//    // User - Like
-//    @OneToMany(mappedBy = "user")
-//    private List<Like> likes = new ArrayList<>();
+
+    // User - Like
+    @OneToMany(mappedBy = "user")
+    private List<Like> likes = new ArrayList<>();
 }

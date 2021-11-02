@@ -92,6 +92,7 @@ class PostControllerTest {
                 .title("test title")
                 .sellerId(user.getId())
                 .build();
+
         PostInsertResponse stubResponse = new PostInsertResponse(post);
         given(postService.insert(any())).willReturn(stubResponse);
 
