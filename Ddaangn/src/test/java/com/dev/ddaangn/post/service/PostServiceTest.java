@@ -87,6 +87,7 @@ class PostServiceTest {
                 .status(PostStatus.SELLING)
                 .views(INIT_POST_VIEWS)
                 .seller(user)
+                .isHidden(false)
                 .build();
         insertedPostStub.setCreatedAt(LocalDateTime.now());
         insertedPostStub.setUpdateAt(LocalDateTime.now());
@@ -106,6 +107,7 @@ class PostServiceTest {
 
         // THEN
         assertThat(result).isEqualTo(givenResult);
+        assertThat(result.getIsHidden()).isFalse();
         verify(postConverter).insertRequestDtoToEntity(givenRequest, user);
         verify(userRepository).findById(givenRequest.getSellerId());
         verify(postRepository).save(postStub);
@@ -125,6 +127,7 @@ class PostServiceTest {
                         .status(PostStatus.SELLING)
                         .views(INIT_POST_VIEWS)
                         .seller(user)
+                        .isHidden(true)
                         .build(),
                 Post.builder()
                         .title("Test Title 2")
@@ -132,6 +135,7 @@ class PostServiceTest {
                         .status(PostStatus.SELLING)
                         .views(INIT_POST_VIEWS)
                         .seller(user)
+                        .isHidden(false)
                         .build()
         );
         Page<Post> stubPosts = new PageImpl<>(posts);
@@ -158,6 +162,7 @@ class PostServiceTest {
                 .status(PostStatus.SELLING)
                 .views(INIT_POST_VIEWS)
                 .seller(user)
+                .isHidden(false)
                 .build();
         stubPostEntity.setCreatedAt(LocalDateTime.now());
         stubPostEntity.setUpdateAt(LocalDateTime.now());
@@ -196,6 +201,7 @@ class PostServiceTest {
                 .status(PostStatus.SELLING)
                 .views(INIT_POST_VIEWS)
                 .seller(user)
+                .isHidden(true)
                 .build();
         stubOriginPostEntity.setCreatedAt(LocalDateTime.now());
         stubOriginPostEntity.setUpdateAt(LocalDateTime.now());
@@ -207,9 +213,10 @@ class PostServiceTest {
                 .status(stubOriginPostEntity.getStatus())
                 .views(stubOriginPostEntity.getViews())
                 .seller(stubOriginPostEntity.getSeller())
+                .isHidden(stubOriginPostEntity.isHidden())
                 .build();
         stubOriginPostEntity.setCreatedAt(stubOriginPostEntity.getCreatedAt());
-        stubOriginPostEntity.setUpdateAt(stubOriginPostEntity.getUpdateAt());
+        stubOriginPostEntity.setUpdateAt(LocalDateTime.now());
 
         PostDetailResponse stubResponseDto = new PostDetailResponse(stubUpdatedPostEntity);
         when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
@@ -219,6 +226,7 @@ class PostServiceTest {
 
         // THEN
         assertThat(result).isEqualTo(stubResponseDto);
+        assertThat(result.getIsHidden()).isTrue();
         verify(postRepository).findById(POST_ID);
     }
 
