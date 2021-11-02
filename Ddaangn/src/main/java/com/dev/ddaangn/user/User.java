@@ -3,16 +3,15 @@ package com.dev.ddaangn.user;
 
 import com.dev.ddaangn.badge.Badge;
 import com.dev.ddaangn.common.BaseEntity;
-import com.dev.ddaangn.evaluation.Evaluation;
+import com.dev.ddaangn.evaluation.domain.Evaluation;
 import com.dev.ddaangn.like.Like;
-import com.dev.ddaangn.post.domain.Post;
+import com.dev.ddaangn.user.role.LoginRole;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
-import javax.persistence.*;
-import com.dev.ddaangn.user.role.LoginRole;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,16 +56,29 @@ public class User extends BaseEntity {
     // User - Post, buyer
     @Embedded
     private BoughtPosts boughtPosts;
+    // 연관관계 매핑
+    // User - Badge
+    @OneToMany(mappedBy = "user")
+    private List<Badge> badges = new ArrayList<>();
+    // User - Evaluation, 받은 평가
+    @OneToMany(mappedBy = "evaluated", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evaluation> givenEvaluations = new ArrayList<>();
+    // User가 준 평가
+    @OneToMany(mappedBy = "evaluator", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evaluation> givingEvaluations = new ArrayList<>();
+    // User - Like
+    @OneToMany(mappedBy = "user")
+    private List<Like> likes = new ArrayList<>();
 
     @Builder
     public User(String name, String email, String picture, LoginRole role) {
         this.name = name;
         this.email = email;
-        this.picture=picture;
-        this.role=role;
+        this.picture = picture;
+        this.role = role;
     }
 
-    public User update(String name, String picture){
+    public User update(String name, String picture) {
         this.name = name;
         this.picture = picture;
 
@@ -77,35 +89,14 @@ public class User extends BaseEntity {
         return this.role.getKey();
     }
 
-
-    // 연관관계 매핑
-    // User - Badge
-    @OneToMany(mappedBy = "user")
-    private List<Badge> badges = new ArrayList<>();
-
-    // User - Evaluation, 받은 평가
-    @OneToMany(mappedBy = "evaluated",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Evaluation> givenEvaluations = new ArrayList<>();
-
-    // User가 준 평가
-    @OneToMany(mappedBy = "evaluator",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Evaluation> givingEvaluations = new ArrayList<>();
-
-
     public void addEvaluated(Evaluation evaluation) {
         givenEvaluations.add(evaluation);
     }
-
-    public void addEvaluator(Evaluation evaluation) {
-        givingEvaluations.add(evaluation);
-    }
-
 
 
     // User - AvatarImage TODO, Image 상속받고 만들기
 //    @OneToMany(mappedBy = "user")
 //    private List<AvatarImage> avatarImages = new ArrayList<>();
-
 
 
     // User - Post, seller
@@ -116,7 +107,7 @@ public class User extends BaseEntity {
 //    @OneToMany(mappedBy = "buyer")
 //    private List<Post> boughtPosts = new ArrayList<>();
 
-    // User - Like
-    @OneToMany(mappedBy = "user")
-    private List<Like> likes = new ArrayList<>();
+    public void addEvaluator(Evaluation evaluation) {
+        givingEvaluations.add(evaluation);
+    }
 }

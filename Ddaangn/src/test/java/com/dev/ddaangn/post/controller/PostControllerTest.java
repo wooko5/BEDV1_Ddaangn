@@ -9,7 +9,6 @@ import com.dev.ddaangn.post.service.PostService;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -41,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-class PostControllerTest {
+public class PostControllerTest {
     private final Long INIT_POST_VIEWS = 1L;
     private final Long POST_ID = 1L;
     private final Long USER_ID = 3L;
@@ -122,8 +120,8 @@ class PostControllerTest {
                                 fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
                                 fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
                                 fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
-                            )
-                        ));
+                        )
+                ));
     }
 
     @Test

@@ -1,6 +1,6 @@
 //package com.dev.ddaangn.evaluation.dto.response;
 //
-//import com.dev.ddaangn.evaluation.Evaluation;
+//import com.dev.ddaangn.evaluation.domain.Evaluation;
 //import lombok.EqualsAndHashCode;
 //import lombok.Getter;
 //
