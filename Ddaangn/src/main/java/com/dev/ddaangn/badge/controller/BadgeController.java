@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/v1/badges")
 public class BadgeController {
@@ -20,10 +22,10 @@ public class BadgeController {
         this.badgeService = badgeService;
     }
 
-    @GetMapping("/") // 배지 전체 조회
+    @GetMapping() // 배지 전체 조회
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<Page<BadgeResponse>> getAll(Pageable pageable) {
-        Page<BadgeResponse> all = badgeService.findAll(pageable);
+    public ApiResponse<List<BadgeResponse>> getAll() {
+        List<BadgeResponse> all = badgeService.findAll();
         return ApiResponse.ok(all);
     }
 }

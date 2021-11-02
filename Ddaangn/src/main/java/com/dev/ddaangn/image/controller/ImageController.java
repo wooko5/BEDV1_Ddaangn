@@ -20,7 +20,7 @@ public class ImageController {
     }
 
 
-    @GetMapping("/") // 이미지 다건 조회
+    @GetMapping() // 이미지 다건 조회
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Page<ImageDto>> getAll(Pageable pageable) {
         Page<ImageDto> all = imageService.findAll(pageable);
@@ -36,7 +36,7 @@ public class ImageController {
     }
 
     // 이미지 작성
-    @PostMapping("/") // 게시글 생성
+    @PostMapping() // 게시글 생성
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Long> save(@RequestBody ImageDto imageDto) {
         Long id = imageService.save(imageDto);
