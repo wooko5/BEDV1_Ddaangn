@@ -10,10 +10,11 @@ import com.dev.ddaangn.common.error.exception.NotFoundException;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +24,22 @@ public class BadgeService {
     private final BadgeConverter badgeConverter;
     private final UserRepository userRepository;
 
+    //    @Transactional
+//    public BadgeResponse save(BadgeRequest request) {
+//        User user = getUser(request.getUserId());
+//        Badge badge = badgeConverter.converterBadge(request, user);
+//        badge.setUser(user);
+//        Badge insertedBadge = badgeRepository.save(badge);
+//        return new BadgeResponse(insertedBadge);
+//    }
+//
+
     @Transactional
-    public BadgeResponse save(BadgeRequest request) {
+    public Long save(BadgeRequest request) {
         User user = getUser(request.getUserId());
         Badge badge = badgeConverter.converterBadge(request, user);
-        badge.setUser(user);
-        Badge insertedBadge = badgeRepository.save(badge);
-        return new BadgeResponse(insertedBadge);
+        Badge savedBadge = badgeRepository.save(badge);
+        return savedBadge.getId();
     }
 
     @Transactional
@@ -39,8 +49,9 @@ public class BadgeService {
     }
 
     @Transactional
-    public Page<BadgeResponse> findAll(Pageable pageable) {
-        return badgeRepository.findAll(pageable)
-                .map(BadgeResponse::new);
+    public List<BadgeResponse> findAll() {
+        return badgeRepository.findAll().stream()
+                .map(BadgeResponse::new)
+                .collect(Collectors.toList());
     }
 }

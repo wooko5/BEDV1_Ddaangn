@@ -1,24 +1,24 @@
 package com.dev.ddaangn.badge;
 
 import com.dev.ddaangn.image.Image;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
-import java.util.Objects;
 
-@NoArgsConstructor
+import javax.persistence.*;
+
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "badge_images")
 public class BadgeImage extends Image {
-    @ManyToOne(fetch = FetchType.LAZY) // BadgeImage - Badge
-    @JoinColumn(name = "badge", referencedColumnName = "id")
+
+    @OneToOne(mappedBy = "badgeImage") // BadgeImage - Badge
+    @JoinColumn(name = "badge_id")
     private Badge badge;
 
-    public void setBadge(Badge badge){
-        if(Objects.nonNull(this.badge)){
-            this.badge.getBadgeImages().remove(this);
-        }
+    public BadgeImage(Long id, String url, String type, Badge badge) {
+        super(id, url, type);
         this.badge = badge;
-        badge.getBadgeImages().add(this);
     }
 }

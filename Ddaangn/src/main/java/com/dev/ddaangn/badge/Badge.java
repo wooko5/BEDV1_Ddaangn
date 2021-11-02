@@ -37,8 +37,8 @@ public class Badge extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "badge")
-    private List<BadgeImage> badgeImages = new ArrayList<>();
+    @OneToOne
+    private BadgeImage badgeImage;
 
     public void setUser(User user) {
         if(Objects.nonNull(this.user)){

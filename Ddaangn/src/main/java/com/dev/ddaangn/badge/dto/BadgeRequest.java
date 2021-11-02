@@ -11,15 +11,10 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 public class BadgeRequest {
+    private Long badgeId;
     private String name;
     private String description;
     private boolean achievement;
-    private List<BadgeImageDto> badgeImageDto;
+    private BadgeImageDto badgeImageDto;
     private Long userId;
-
-    public List<BadgeImage> ListDtoToListEntity(List<BadgeImageDto> badgeImageDtos){
-        return badgeImageDtos.stream()
-                .map(BadgeImageDto::toEntity)
-                .collect(Collectors.toList());
-    }
 }

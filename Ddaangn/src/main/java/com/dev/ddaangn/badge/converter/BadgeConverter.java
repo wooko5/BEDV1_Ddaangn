@@ -14,10 +14,11 @@ public class BadgeConverter {
 
     public Badge converterBadge(BadgeRequest request, User user){ // Dto -> Entity
         return Badge.builder()
+                .id(request.getBadgeId())
                 .name(request.getName())
                 .description(request.getDescription())
                 .achievement(request.isAchievement())
-                .badgeImages(request.ListDtoToListEntity(request.getBadgeImageDto()))
+                .badgeImage(request.getBadgeImageDto().toEntity())
                 .user(user)
                 .build();
     }
