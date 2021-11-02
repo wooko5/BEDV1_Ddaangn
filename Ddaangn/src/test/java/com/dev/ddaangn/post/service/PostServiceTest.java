@@ -5,6 +5,7 @@ import com.dev.ddaangn.post.converter.PostConverter;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.request.PostStatusUpdateRequest;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.repository.PostRepository;
@@ -240,5 +241,48 @@ class PostServiceTest {
         // THEN
         verify(postRepository).existsById(POST_ID);
         verify(postRepository).deleteById(POST_ID);
+    }
+
+    @Test
+    @DisplayName("Post의 상태를 수정할 수 있다.")
+    void testUpdateStatus() {
+        // GIVEN
+        PostStatusUpdateRequest givenRequest = PostStatusUpdateRequest.builder()
+                .status(PostStatus.RESERVED)
+                .build();
+        Post stubOriginPostEntity = Post.builder()
+                .id(POST_ID)
+                .title("test title")
+                .contents("test contents")
+                .status(PostStatus.SELLING)
+                .views(INIT_POST_VIEWS)
+                .seller(user)
+                .isHidden(true)
+                .build();
+        stubOriginPostEntity.setCreatedAt(LocalDateTime.now());
+        stubOriginPostEntity.setUpdateAt(LocalDateTime.now());
+
+        Post stubUpdatedPostEntity = Post.builder()
+                .id(stubOriginPostEntity.getId())
+                .title(stubOriginPostEntity.getTitle())
+                .contents(stubOriginPostEntity.getContents())
+                .status(givenRequest.getStatus())
+                .views(stubOriginPostEntity.getViews())
+                .seller(stubOriginPostEntity.getSeller())
+                .isHidden(stubOriginPostEntity.isHidden())
+                .build();
+        stubOriginPostEntity.setCreatedAt(stubOriginPostEntity.getCreatedAt());
+        stubOriginPostEntity.setUpdateAt(LocalDateTime.now());
+
+        PostDetailResponse stubResponseDto = new PostDetailResponse(stubUpdatedPostEntity);
+        when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
+
+        // WHEN
+        PostDetailResponse result = postService.updateStatus(POST_ID, givenRequest);
+
+        // THEN
+        assertThat(result).isEqualTo(stubResponseDto);
+        assertThat(result.getStatus().getStatus()).isEqualTo(givenRequest.getStatus());
+        verify(postRepository).findById(POST_ID);
     }
 }

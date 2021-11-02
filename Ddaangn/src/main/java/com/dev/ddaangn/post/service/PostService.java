@@ -5,6 +5,7 @@ import com.dev.ddaangn.common.error.exception.NotFoundException;
 import com.dev.ddaangn.post.converter.PostConverter;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.request.PostStatusUpdateRequest;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.repository.PostRepository;
@@ -70,5 +71,13 @@ public class PostService {
     public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER));
+    }
+
+    @Transactional
+    public PostDetailResponse updateStatus(Long postId, PostStatusUpdateRequest request) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER));
+        post.updateStatus(request);
+        return new PostDetailResponse(post);
     }
 }
