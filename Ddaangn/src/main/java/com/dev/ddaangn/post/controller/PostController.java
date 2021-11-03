@@ -2,6 +2,7 @@ package com.dev.ddaangn.post.controller;
 
 import com.dev.ddaangn.common.api.ApiResponse;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
+import com.dev.ddaangn.post.dto.request.PostStatusUpdateRequest;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.service.PostService;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -46,6 +49,11 @@ public class PostController {
     public ApiResponse<Void> delete(@PathVariable("id") Long postId) {
         postService.delete(postId);
         return ApiResponse.ok(null);
+    }
+
+    @PutMapping("/{id}/status")
+    public ApiResponse<PostDetailResponse> updateStatus(@PathVariable("id") Long postId, @Valid @RequestBody PostStatusUpdateRequest request) {
+        return ApiResponse.ok(postService.updateStatus(postId, request));
     }
 
 }
