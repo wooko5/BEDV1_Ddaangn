@@ -303,4 +303,28 @@ class PostServiceTest {
 
         verify(postRepository).findById(POST_ID);
     }
+
+    @Test
+    @DisplayName("Post의 숨김 처리를 바꿀 수 있다.")
+    void testToggleHidden() {
+        // GIVEN
+        Post stubOriginPostEntity = Post.builder()
+                .id(POST_ID)
+                .title("test title")
+                .contents("test contents")
+                .status(PostStatus.SELLING)
+                .views(INIT_POST_VIEWS)
+                .seller(user)
+                .isHidden(true)
+                .build();
+        PostDetailResponse resultStub = new PostDetailResponse(stubOriginPostEntity);
+        when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
+
+        // WHEN
+        PostDetailResponse result = postService.toggleHidden(POST_ID);
+
+        // THEN
+        assertThat(result.getIsHidden()).isEqualTo(!resultStub.getIsHidden());
+
+    }
 }

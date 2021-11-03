@@ -70,4 +70,8 @@ public class Post extends BaseEntity {
         this.buyer = buyer;
         buyer.getBoughtPosts().addPost(this);
     }
+
+    public void toggleHidden() {
+        isHidden = !isHidden;
+    }
 }
