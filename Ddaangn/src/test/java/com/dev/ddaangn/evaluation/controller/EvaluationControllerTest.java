@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EvaluationControllerTest {
 
 
+
     private final Long GIVING_ID = 4L;
     private final Long GIVEN_ID = 5L;
     private final Double USER_TEMPERATURE = 36.0;
@@ -78,8 +79,16 @@ public class EvaluationControllerTest {
 
         LocalDateTime now = LocalDateTime.now();
 
+        session=new MockHttpSession();
 
-        this.mockMvc = MockMvcBuilders
+        sessionUser=new SessionUser();
+        sessionUser.setId(3L);
+        sessionUser.setEmail("sds1vrk@naver.com");
+
+        session.setAttribute("user",sessionUser);
+
+
+        this.mockMvc= MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
@@ -139,6 +148,8 @@ public class EvaluationControllerTest {
     }
 
 
+
+
     // 평가해보기
     @Test
     @DisplayName("Session 계정으로 User 평가하기")
@@ -146,7 +157,7 @@ public class EvaluationControllerTest {
     public void 평가하기() throws Exception {
         // GIVEN
         EvaluationInsertRequest requestDto = EvaluationInsertRequest.builder()
-                .evaluatedId(givenUserEntity.getId())
+                .evaluatedId(givingUserEntity.getId())
                 .evaluationDetails(
                         Arrays.asList(
                                 evaluationsDetailEntity1.getId(),

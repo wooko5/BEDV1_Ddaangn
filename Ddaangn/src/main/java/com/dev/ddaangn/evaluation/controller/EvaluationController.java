@@ -23,9 +23,9 @@ public class EvaluationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<List<EvaluationMappingDetailResponse>> update(@RequestBody EvaluationInsertRequest request, @LoginUser SessionUser user) {
-        log.info("[제발제발제발] id : {} ", user.getId());
-        log.info("[제발제발제발] name : {} ", user.getName());
-        return ApiResponse.ok(evaluationService.createEvaluation(request, user));
+            log.info("[제발제발제발] id : {} ", user.getId());
+            log.info("[제발제발제발] name : {} ", user.getName());
+            return ApiResponse.ok(evaluationService.createEvaluation(request, user));
     }
 
 }

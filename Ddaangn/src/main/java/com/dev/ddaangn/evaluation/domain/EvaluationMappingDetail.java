@@ -22,7 +22,7 @@ public class EvaluationMappingDetail extends BaseEntity {
     @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
     private Evaluation evaluation;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "evaluation_detail_id", referencedColumnName = "id")
     private EvaluationsDetail evaluationsDetail;
 
