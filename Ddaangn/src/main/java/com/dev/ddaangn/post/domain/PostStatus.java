@@ -1,8 +1,10 @@
 package com.dev.ddaangn.post.domain;
 
 import com.dev.ddaangn.common.error.ErrorMessage;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 public enum PostStatus {
     RESERVED(1, "예약 중"),
@@ -18,14 +20,6 @@ public enum PostStatus {
         this.status = status;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public Integer getValue() {
-        return val;
-    }
-
     public static PostStatus of(String status) {
         return Arrays.stream(values())
                 .filter(element -> element.status.equals(status))
@@ -38,5 +32,21 @@ public enum PostStatus {
                 .filter(element -> element.val == value)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException(ErrorMessage.INTERNAL_SERVER_ERROR.message()));
+    }
+
+    @JsonCreator
+    public static PostStatus create(String requestValue) {
+        return Stream.of(values())
+                .filter(v -> v.status.equals(requestValue))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(ErrorMessage.INVALID_POST_STATUS.message()));
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Integer getValue() {
+        return val;
     }
 }

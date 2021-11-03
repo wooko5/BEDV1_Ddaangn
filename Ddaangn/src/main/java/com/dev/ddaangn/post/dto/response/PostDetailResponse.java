@@ -17,15 +17,19 @@ public class PostDetailResponse extends BaseResponse {
     private final Long views;
     // TODO: images
     private final String sellerName;
+    private final String buyerName;
+    private final Boolean isHidden;
 
     public PostDetailResponse(Post post) {
         super(post.getCreatedAt(), post.getUpdateAt(), post.getDeletedAt());
-        this.id = post.getId();
-        this.title = post.getTitle();
-        this.contents = post.getContents();
-        this.status = post.getStatus();
-        this.views = post.getViews();
-        this.sellerName = post.getSeller().getName();
+        id = post.getId();
+        title = post.getTitle();
+        contents = post.getContents();
+        status = post.getStatus();
+        views = post.getViews();
+        sellerName = post.getSeller().getName();
+        isHidden = post.isHidden();
+        buyerName = post.getBuyer() != null ? post.getBuyer().getName() : "";
     }
 
     @Override

@@ -323,4 +323,49 @@ class PostControllerTest {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("[PUT] '/api/v1/posts/{postId}/toggle-hidden'")
+    void testToggleHiddenCall() throws Exception {
+        // SOLD -> SELLING
+        // GIVEN
+        Post stubResultPost = Post.builder()
+                .id(POST_ID)
+                .title("test title")
+                .contents("test contents")
+                .status(PostStatus.SELLING)
+                .views(INIT_POST_VIEWS)
+                .seller(user)
+                .isHidden(!post.isHidden())
+                .build();
+        stubResultPost.setCreatedAt(post.getCreatedAt());
+        stubResultPost.setUpdateAt(post.getUpdateAt());
+
+        PostDetailResponse stubResultResponse = new PostDetailResponse(stubResultPost);
+        given(postService.toggleHidden(any())).willReturn(stubResultResponse);
+
+        RequestBuilder request = MockMvcRequestBuilders.put("/api/v1/posts/" + post.getId() + "/toggle-hidden")
+                .contentType(MediaType.APPLICATION_JSON); // TODO: 사진 들어오면 multipart/form-data
+
+        // WHEN // THEN
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("post-toggle",
+                        responseFields(
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),
+                                fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
+                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
+                                fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.isHidden").type(JsonFieldType.BOOLEAN).description("판매자"),
+                                fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+                                fieldWithPath("data.buyerName").type(JsonFieldType.STRING).description("구매자"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
+                                fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
+                                fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
+                                fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
+                        )
+                ));
+    }
 }

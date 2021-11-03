@@ -17,7 +17,6 @@ public class PostConverter {
                 .contents(request.getContents())
                 .status(PostStatus.SELLING)
                 .views(INIT_VIEW_NUMBER)
-                .seller(seller)
                 .build();
     }
 }
