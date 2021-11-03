@@ -56,4 +56,9 @@ public class PostController {
         return ApiResponse.ok(postService.updateStatus(postId, request));
     }
 
+    @PutMapping("/{id}/toggle-hidden")
+    public ApiResponse<PostDetailResponse> toggleHidden(@PathVariable("id") Long postId) {
+        return ApiResponse.ok(postService.toggleHidden(postId));
+    }
+
 }
