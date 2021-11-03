@@ -17,6 +17,7 @@ public class PostDetailResponse extends BaseResponse {
     private final Long views;
     // TODO: images
     private final String sellerName;
+    private final String buyerName;
     private final Boolean isHidden;
 
     public PostDetailResponse(Post post) {
@@ -28,6 +29,7 @@ public class PostDetailResponse extends BaseResponse {
         views = post.getViews();
         sellerName = post.getSeller().getName();
         isHidden = post.isHidden();
+        buyerName = post.getBuyer() != null ? post.getBuyer().getName() : "";
     }
 
     @Override

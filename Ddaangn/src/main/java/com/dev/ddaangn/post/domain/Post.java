@@ -2,7 +2,6 @@ package com.dev.ddaangn.post.domain;
 
 import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.post.converter.PostStatusAttributeConverter;
-import com.dev.ddaangn.post.dto.request.PostStatusUpdateRequest;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.user.User;
 import lombok.AllArgsConstructor;
@@ -61,12 +60,13 @@ public class Post extends BaseEntity {
         title = request.getTitle();
     }
 
-    public void updateStatus(PostStatusUpdateRequest request) {
-        status = request.getStatus();
+    public void updateStatus(PostStatus status) {
+        this.status = status;
     }
 
     public void updateBuyer(User buyer) {
-        this.buyer.getBoughtPosts().deletePost(this);
+        if (this.buyer != null)
+            this.buyer.getBoughtPosts().deletePost(this);
         this.buyer = buyer;
         buyer.getBoughtPosts().addPost(this);
     }

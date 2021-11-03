@@ -54,6 +54,7 @@ class PostControllerTest {
 
     private User user;
     private Post post;
+    private Post soldPost;
 
     @BeforeEach
     void setUp() {
@@ -79,6 +80,9 @@ class PostControllerTest {
         post.setUpdateAt(now);
         user.setCreatedAt(now);
         post.setUpdateAt(now);
+
+        post.addPost(user);
+        // user.getSoldPosts().addPost(post);
     }
 
     @Test
@@ -113,7 +117,9 @@ class PostControllerTest {
                                 fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
                                 fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
                                 fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.isHidden").type(JsonFieldType.BOOLEAN).description("판매자"),
                                 fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+                                fieldWithPath("data.buyerName").type(JsonFieldType.STRING).description("구매자"),
                                 fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
                                 fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
                                 fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
@@ -188,7 +194,9 @@ class PostControllerTest {
                                 fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
                                 fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
                                 fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.isHidden").type(JsonFieldType.BOOLEAN).description("판매자"),
                                 fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+                                fieldWithPath("data.buyerName").type(JsonFieldType.STRING).description("구매자"),
                                 fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
                                 fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
                                 fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
@@ -230,7 +238,9 @@ class PostControllerTest {
                                 fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
                                 fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
                                 fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.isHidden").type(JsonFieldType.BOOLEAN).description("판매자"),
                                 fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+                                fieldWithPath("data.buyerName").type(JsonFieldType.STRING).description("구매자"),
                                 fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
                                 fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
                                 fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
@@ -257,6 +267,60 @@ class PostControllerTest {
                                 fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
                         )
                 ));
+    }
 
+    @Test
+    @DisplayName("[PUT] '/api/v1/posts/{id}/status' (SELLING -> SOLD)")
+    void testUpdateStatusCall() throws Exception {
+        // SOLD -> SELLING
+        // GIVEN
+        User buyer = User.builder()
+                .id(USER_ID + 1)
+                .address("my address")
+                .name("일용 2")
+                .phoneNumber("010-5048-0001")
+                .temperature(USER_TEMPERATURE)
+                .soldPosts(new SoldPosts())
+                .boughtPosts(new BoughtPosts())
+                .build();
+        post.updateBuyer(buyer);
+
+//        PostStatusUpdateRequest givenRequest = PostStatusUpdateRequest.builder()
+//                .status(PostStatus.SOLD)
+//                .targetUserId(buyer.getId())
+//                .build();
+
+        PostDetailResponse stubResponse = new PostDetailResponse(post);
+        given(postService.updateStatus(any(), any())).willReturn(stubResponse);
+
+        RequestBuilder request = MockMvcRequestBuilders.put("/api/v1/posts/" + post.getId() + "/status")
+                .contentType(MediaType.APPLICATION_JSON) // TODO: 사진 들어오면 multipart/form-data
+                .content("{\"status\": \"예약 중\", \"targetUserId\":4}");
+
+
+        // WHEN // THEN
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("post-update-status",
+                        requestFields(
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("게시글 상태"),
+                                fieldWithPath("targetUserId").type(JsonFieldType.NUMBER).description("구매자/예약자 pk")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),
+                                fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
+                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
+                                fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.isHidden").type(JsonFieldType.BOOLEAN).description("판매자"),
+                                fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+                                fieldWithPath("data.buyerName").type(JsonFieldType.STRING).description("구매자"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
+                                fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
+                                fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
+                                fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
+                        )
+                ));
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/posts")
@@ -50,7 +52,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}/status")
-    public ApiResponse<PostDetailResponse> updateStatus(@PathVariable("id") Long postId, @RequestBody PostStatusUpdateRequest request) {
+    public ApiResponse<PostDetailResponse> updateStatus(@PathVariable("id") Long postId, @Valid @RequestBody PostStatusUpdateRequest request) {
         return ApiResponse.ok(postService.updateStatus(postId, request));
     }
 

@@ -81,7 +81,7 @@ public class PostService {
             User buyer = getUser(request.getTargetUserId());
             post.updateBuyer(buyer);
         }
-        post.updateStatus(request);
+        post.updateStatus(request.getStatus());
         return new PostDetailResponse(post);
     }
 }

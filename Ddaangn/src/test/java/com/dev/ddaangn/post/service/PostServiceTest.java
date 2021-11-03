@@ -247,8 +247,18 @@ class PostServiceTest {
     @DisplayName("Post의 상태를 수정할 수 있다.")
     void testUpdateStatus() {
         // GIVEN
+        User buyer = User.builder()
+                .id(USER_ID + 1)
+                .address("my address")
+                .name("일용 2")
+                .phoneNumber("010-5048-0001")
+                .temperature(USER_TEMPERATURE)
+                .soldPosts(new SoldPosts())
+                .boughtPosts(new BoughtPosts())
+                .build();
         PostStatusUpdateRequest givenRequest = PostStatusUpdateRequest.builder()
                 .status(PostStatus.RESERVED)
+                .targetUserId(buyer.getId())
                 .build();
         Post stubOriginPostEntity = Post.builder()
                 .id(POST_ID)
@@ -262,6 +272,8 @@ class PostServiceTest {
         stubOriginPostEntity.setCreatedAt(LocalDateTime.now());
         stubOriginPostEntity.setUpdateAt(LocalDateTime.now());
 
+        user.getSoldPosts().addPost(stubOriginPostEntity);
+
         Post stubUpdatedPostEntity = Post.builder()
                 .id(stubOriginPostEntity.getId())
                 .title(stubOriginPostEntity.getTitle())
@@ -269,6 +281,7 @@ class PostServiceTest {
                 .status(givenRequest.getStatus())
                 .views(stubOriginPostEntity.getViews())
                 .seller(stubOriginPostEntity.getSeller())
+                .buyer(buyer)
                 .isHidden(stubOriginPostEntity.isHidden())
                 .build();
         stubOriginPostEntity.setCreatedAt(stubOriginPostEntity.getCreatedAt());
@@ -276,13 +289,18 @@ class PostServiceTest {
 
         PostDetailResponse stubResponseDto = new PostDetailResponse(stubUpdatedPostEntity);
         when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
+        when(userRepository.findById(any())).thenReturn(Optional.of(buyer));
 
         // WHEN
         PostDetailResponse result = postService.updateStatus(POST_ID, givenRequest);
 
         // THEN
         assertThat(result).isEqualTo(stubResponseDto);
-        assertThat(result.getStatus().getStatus()).isEqualTo(givenRequest.getStatus());
+        assertThat(result.getStatus()).isEqualTo(givenRequest.getStatus());
+        assertThat(result.getBuyerName()).isEqualTo(buyer.getName());
+        assertThat(buyer.getBoughtPosts().getSize()).isGreaterThan(0);
+        assertThat(user.getSoldPosts().getSize()).isGreaterThan(0);
+
         verify(postRepository).findById(POST_ID);
     }
 }
