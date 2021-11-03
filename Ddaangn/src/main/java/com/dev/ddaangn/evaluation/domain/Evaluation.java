@@ -25,11 +25,11 @@ public class Evaluation extends BaseEntity {
     private Long id;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "evaluated_id", referencedColumnName = "id")
     private User evaluated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "evaluator_id", referencedColumnName = "id")
     private User evaluator;
 

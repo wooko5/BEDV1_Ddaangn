@@ -4,7 +4,6 @@ import com.dev.ddaangn.evaluation.domain.EvaluationsDetail;
 import com.dev.ddaangn.evaluation.dto.request.EvaluationInsertRequest;
 import com.dev.ddaangn.evaluation.repository.EvaluationsDetailRepository;
 import com.dev.ddaangn.user.User;
-import com.dev.ddaangn.user.config.auth.CustomOAuth2UserService;
 import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.dev.ddaangn.user.repository.UserRepository;
 import com.dev.ddaangn.user.role.LoginRole;
@@ -21,15 +20,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,26 +41,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class EvaluationControllerTest {
 
+
+
     private final Long GIVING_ID = 4L;
     private final Long GIVEN_ID = 5L;
     private final Double USER_TEMPERATURE = 36.0;
-    protected MockHttpSession session = new MockHttpSession();
-    //    @Autowired
-//    private EvaluationService evaluationService;
-//    @Autowired
-//    private EvaluationRepository evaluationRepository;
+    protected MockHttpSession session;
+
+    @Autowired
+    private WebApplicationContext context;
+
+
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private CustomOAuth2UserService userService;
+
     @Autowired
     private EvaluationsDetailRepository evaluationsDetailRepository;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private WebApplicationContext context;
+
     private User givingUser;
     private User givenUser;
     private User givingUserEntity;
@@ -67,17 +70,33 @@ public class EvaluationControllerTest {
     private EvaluationsDetail evaluationsDetailEntity2;
     private EvaluationsDetail evaluationsDetailEntity3;
 
-//    private Evaluation evaluation;
 
+    private SessionUser sessionUser;
 
     @Before
     public void setUp() {
+
+
         LocalDateTime now = LocalDateTime.now();
+
+        session=new MockHttpSession();
+
+        sessionUser=new SessionUser();
+        sessionUser.setId(3L);
+        sessionUser.setEmail("sds1vrk@naver.com");
+
+        session.setAttribute("user",sessionUser);
+
+
+        this.mockMvc= MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
 
         givingUser = User.builder()
                 // .id(GIVING_ID)
                 .address("my address")
-                .name("동성")
+                .name("test")
                 .phoneNumber("010-xxxx-xxxx")
                 .email("sds1vrk@naver.com")
                 .temperature(USER_TEMPERATURE)
@@ -123,10 +142,12 @@ public class EvaluationControllerTest {
     }
 
 
+
+
     // 평가해보기
     @Test
     @DisplayName("Session 계정으로 User 평가하기")
-    // @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     public void 평가하기() throws Exception {
         // GIVEN
         EvaluationInsertRequest requestDto = EvaluationInsertRequest.builder()
@@ -140,14 +161,11 @@ public class EvaluationControllerTest {
                 .build();
 
         RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/evaluations")
-                // .session(session)
+                .session(session)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto));
 
         // WHEN THEN
-        userService.
-                session.setAttribute("user", new SessionUser(givingUserEntity));
-
         mockMvc.perform(request)
                 .andDo(print())
                 .andExpect(
