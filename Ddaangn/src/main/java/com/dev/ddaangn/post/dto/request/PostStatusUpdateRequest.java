@@ -8,4 +8,5 @@ import lombok.Getter;
 @Builder
 public class PostStatusUpdateRequest {
     private final PostStatus status;
+    private Long targetUserId;
 }

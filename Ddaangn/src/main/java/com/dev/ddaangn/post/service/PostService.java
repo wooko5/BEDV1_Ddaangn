@@ -77,6 +77,10 @@ public class PostService {
     public PostDetailResponse updateStatus(Long postId, PostStatusUpdateRequest request) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_MEMBER));
+        if (request.getTargetUserId() != null) { // 예약자, 구입자가 있는 경우
+            User buyer = getUser(request.getTargetUserId());
+            post.updateBuyer(buyer);
+        }
         post.updateStatus(request);
         return new PostDetailResponse(post);
     }

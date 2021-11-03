@@ -52,7 +52,7 @@ public class Post extends BaseEntity {
     private User buyer;
 
     public void addPost(User user) {
-        this.seller = user;
+        seller = user;
         user.getSoldPosts().addPost(this);
     }
 
@@ -62,6 +62,12 @@ public class Post extends BaseEntity {
     }
 
     public void updateStatus(PostStatusUpdateRequest request) {
-        this.status = request.getStatus();
+        status = request.getStatus();
+    }
+
+    public void updateBuyer(User buyer) {
+        this.buyer.getBoughtPosts().deletePost(this);
+        this.buyer = buyer;
+        buyer.getBoughtPosts().addPost(this);
     }
 }
