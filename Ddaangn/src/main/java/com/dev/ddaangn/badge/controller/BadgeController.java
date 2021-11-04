@@ -4,8 +4,6 @@ import com.dev.ddaangn.badge.dto.BadgeRequest;
 import com.dev.ddaangn.badge.dto.BadgeResponse;
 import com.dev.ddaangn.badge.service.BadgeService;
 import com.dev.ddaangn.common.api.ApiResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +27,8 @@ public class BadgeController {
 
     @PostMapping // 배지 생성
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<BadgeResponse> save(@RequestBody BadgeRequest request) {
+    public ApiResponse<Long> save(@RequestBody BadgeRequest request) {
         BadgeResponse badgeResponse = badgeService.save(request);
-        return ApiResponse.ok(badgeResponse);
+        return ApiResponse.ok(badgeResponse.getBadgeId());
     }
 }
