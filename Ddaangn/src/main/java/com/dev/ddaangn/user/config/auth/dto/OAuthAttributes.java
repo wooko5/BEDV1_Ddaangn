@@ -1,7 +1,7 @@
 package com.dev.ddaangn.user.config.auth.dto;
 
-import com.dev.ddaangn.user.Role;
 import com.dev.ddaangn.user.User;
+import com.dev.ddaangn.user.role.LoginRole;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -80,7 +80,7 @@ public class OAuthAttributes {
                 .name(name)
                 .email(email)
                 .picture(picture)
-                .role(Role.GUEST)
+                .role(LoginRole.USER)
                 .build();
     }
 }

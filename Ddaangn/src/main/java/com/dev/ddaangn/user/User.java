@@ -8,14 +8,10 @@ import com.dev.ddaangn.like.Like;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
-
 import javax.persistence.*;
-
+import com.dev.ddaangn.user.role.LoginRole;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -39,14 +35,15 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private LoginRole role;
 
-    @Column(nullable = false)
+    @Setter
+    @Column(nullable = true)
     private Double temperature;
 
     private String address;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String phoneNumber;
 
     // User - Post, seller
@@ -58,7 +55,7 @@ public class User extends BaseEntity {
     private BoughtPosts boughtPosts;
 
     @Builder
-    public User(String name, String email, String picture, Role role) {
+    public User(String name, String email, String picture, LoginRole role) {
         this.name = name;
         this.email = email;
         this.picture=picture;

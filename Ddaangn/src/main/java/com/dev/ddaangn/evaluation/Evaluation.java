@@ -3,6 +3,7 @@ package com.dev.ddaangn.evaluation;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.common.BaseEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Entity(name = "evaluations")
 @DynamicUpdate
+@Builder
 public class Evaluation extends BaseEntity {
 
     @Id
