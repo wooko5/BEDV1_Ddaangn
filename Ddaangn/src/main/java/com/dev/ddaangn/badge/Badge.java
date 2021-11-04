@@ -3,6 +3,7 @@ package com.dev.ddaangn.badge;
 
 import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -36,7 +37,7 @@ public class Badge extends BaseEntity {
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "badge_images_id")
+    @JoinColumn(name = "badge_images_id", referencedColumnName = "id")
     private BadgeImage badgeImage;
 
     public void setUser(User user) {
@@ -45,6 +46,10 @@ public class Badge extends BaseEntity {
         }
         this.user = user;
         user.getBadges().add(this);
+    }
+
+    public void removeUser() {
+        this.user = null;
     }
 
 }
