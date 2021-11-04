@@ -1,43 +1,58 @@
-package com.dev.ddaangn.badge.service;
+package com.dev.ddaangn.badge.controller;
 
 import com.dev.ddaangn.badge.dto.BadgeImageDto;
 import com.dev.ddaangn.badge.dto.BadgeRequest;
-import com.dev.ddaangn.badge.dto.BadgeResponse;
 import com.dev.ddaangn.badge.repository.BadgeRepository;
+import com.dev.ddaangn.badge.service.BadgeService;
 import com.dev.ddaangn.user.Role;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Slf4j
+@AutoConfigureRestDocs
+@AutoConfigureMockMvc
 @SpringBootTest
-class BadgeServiceTest {
+class BadgeControllerTest {
 
     @Autowired
-    private BadgeRepository badgeRepository;
+    BadgeService badgeService;
 
     @Autowired
-    private BadgeService badgeService;
+    BadgeRepository badgeRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    private final Long USER_ID = 1L;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private MockMvc mockMvc;
+
 
     @BeforeEach
     void setUp() {
         User user = User.builder()
-                .id(USER_ID)
+                .id(1L)
                 .address("myAddress")
                 .name("재욱")
                 .phoneNumber("010-1234-5678")
@@ -66,20 +81,25 @@ class BadgeServiceTest {
     }
 
     @AfterEach
-    void cleanUp() {
+    void cleanup() {
         badgeRepository.deleteAll();
     }
 
-    @Test
-    @DisplayName("Badge를 전체 조회할 수 있다")
-    void findAllTest() {
-        List<BadgeResponse> badgeResponses = badgeService.findAll();
-        assertThat(badgeResponses.size()).isEqualTo(1);
+    @Test // 수정 중입니다!
+    @DisplayName("[GET] '/api/v1/badges'")
+    void getAllTest() throws Exception {
+        mockMvc.perform(get("/api/v1/badges")
+                        .param("page", String.valueOf(0))
+                        .param("size", String.valueOf(10))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test
-    @DisplayName("Badge를 생성할 수 있다")
-    void insertTest() {
+    @DisplayName("[POST] '/api/v1/badges'")
+    void saveTest() throws Exception {
+        // Given
         User user = User.builder()
                 .address("myAddress")
                 .name("프로그래머스")
@@ -91,7 +111,6 @@ class BadgeServiceTest {
                 .boughtPosts(new BoughtPosts())
                 .build();
         userRepository.save(user);
-
 
         BadgeRequest request = BadgeRequest.builder()
                 .name("불친절왕")
@@ -107,10 +126,11 @@ class BadgeServiceTest {
                         .build())
                 .build();
 
-        BadgeResponse savedBadge = badgeService.save(request);
-        assertThat(savedBadge.getName()).isEqualTo("불친절왕");
-        assertThat(savedBadge.getDescription()).isEqualTo("거래 이후에 불친절한 당신에게 주는 상");
-        assertThat(savedBadge.isAchievement()).isFalse();
+        // When, Then
+        mockMvc.perform(post("/api/v1//badges")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is2xxSuccessful()) // 201
+                .andDo(print());
     }
-
 }
