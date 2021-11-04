@@ -1,7 +1,10 @@
 package com.dev.ddaangn.badge.controller;
 
+import com.dev.ddaangn.badge.Badge;
+import com.dev.ddaangn.badge.BadgeImage;
 import com.dev.ddaangn.badge.dto.BadgeImageDto;
 import com.dev.ddaangn.badge.dto.BadgeRequest;
+import com.dev.ddaangn.badge.dto.BadgeResponse;
 import com.dev.ddaangn.badge.repository.BadgeRepository;
 import com.dev.ddaangn.badge.service.BadgeService;
 import com.dev.ddaangn.user.Role;
@@ -20,9 +23,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,10 +57,11 @@ class BadgeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private User user;
 
     @BeforeEach
     void setUp() {
-        User user = User.builder()
+        user = User.builder()
                 .id(1L)
                 .address("myAddress")
                 .name("재욱")
@@ -85,12 +95,12 @@ class BadgeControllerTest {
         badgeRepository.deleteAll();
     }
 
-    @Test // 수정 중입니다!
+    @Test
     @DisplayName("[GET] '/api/v1/badges'")
     void getAllTest() throws Exception {
         mockMvc.perform(get("/api/v1/badges")
                         .param("page", String.valueOf(0))
-                        .param("size", String.valueOf(10))
+                        .param("size", String.valueOf(1))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -127,7 +137,7 @@ class BadgeControllerTest {
                 .build();
 
         // When, Then
-        mockMvc.perform(post("/api/v1//badges")
+        mockMvc.perform(post("/api/v1/badges")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is2xxSuccessful()) // 201
