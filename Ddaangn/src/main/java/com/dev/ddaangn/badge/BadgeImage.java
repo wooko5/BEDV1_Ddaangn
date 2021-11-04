@@ -14,7 +14,6 @@ import javax.persistence.*;
 @Entity(name = "badge_images")
 @Builder
 public class BadgeImage extends Image {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -25,6 +24,9 @@ public class BadgeImage extends Image {
     @Column(name = "type", length = 30)
     private String type;
 
-    @OneToOne(mappedBy = "badgeImage") // BadgeImage - Badge
+    /*Badge와 BadgeImage는 단방향 관계여야 BadgeControllerTest의 getAllTest()에서 무한참조에 빠지지 않는다
+    그래서 아래의 코드를 주석처리함
+    @OneToOne(mappedBy = "badgeImage")
     private Badge badge;
+     */
 }
