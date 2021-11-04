@@ -35,9 +35,10 @@ public class EvaluationService {
         // 1. User찾고
         User evaluator = getUser(sessionUser.getId());
         User evaluated = getUser(request.getEvaluatedId());
+        String evaluate=request.getEvaluation();
 
         // 2. Evaluation Entity
-        Evaluation evaluation = request.insertRequestDtoToEntity(evaluator, evaluated);
+        Evaluation evaluation = request.insertRequestDtoToEntity(evaluator, evaluated,evaluate);
         // 3. EvaluationDetails 찾고
         // 4. evaluation이랑 List<> detail에 대해 mappingEvaluationEvaluationDetail 엔티티들 만들기.
         return getEvaluationsDetail(request.getEvaluationDetails()).stream().map(detail ->

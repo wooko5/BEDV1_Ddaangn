@@ -36,11 +36,10 @@ public class Evaluation extends BaseEntity {
     @OneToMany(mappedBy = "evaluation")
     private List<EvaluationMappingDetail> mappingEvaluationEvaluationDetails = new ArrayList<>();
 
-//    @Builder
-//    public Evaluation(User givingUser, User givenUser) {
-//        this.evaluator = givingUser;
-//        this.evaluated = givenUser;
-//    }
+    // 평가 필드
+    private String evaluation;
+
+
 
     public void addMappingEvaluationEvaluationDetail(EvaluationMappingDetail item) {
         mappingEvaluationEvaluationDetails.add(item);
