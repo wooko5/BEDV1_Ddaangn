@@ -24,22 +24,13 @@ public class BadgeService {
     private final BadgeConverter badgeConverter;
     private final UserRepository userRepository;
 
-    //    @Transactional
-//    public BadgeResponse save(BadgeRequest request) {
-//        User user = getUser(request.getUserId());
-//        Badge badge = badgeConverter.converterBadge(request, user);
-//        badge.setUser(user);
-//        Badge insertedBadge = badgeRepository.save(badge);
-//        return new BadgeResponse(insertedBadge);
-//    }
-//
-
     @Transactional
-    public Long save(BadgeRequest request) {
+    public BadgeResponse save(BadgeRequest request) {
         User user = getUser(request.getUserId());
         Badge badge = badgeConverter.converterBadge(request, user);
-        Badge savedBadge = badgeRepository.save(badge);
-        return savedBadge.getId();
+        badge.setUser(user);
+        Badge insertedBadge = badgeRepository.save(badge);
+        return new BadgeResponse(insertedBadge);
     }
 
     @Transactional
