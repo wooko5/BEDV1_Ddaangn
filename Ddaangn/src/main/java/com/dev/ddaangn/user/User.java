@@ -8,6 +8,7 @@ import com.dev.ddaangn.like.Like;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -63,11 +65,11 @@ public class User extends BaseEntity {
     public User(String name, String email, String picture, Role role) {
         this.name = name;
         this.email = email;
-        this.picture=picture;
-        this.role=role;
+        this.picture = picture;
+        this.role = role;
     }
 
-    public User update(String name, String picture){
+    public User update(String name, String picture) {
         this.name = name;
         this.picture = picture;
 
@@ -84,14 +86,13 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Badge> badges = new ArrayList<>();
 
+    public void addBadges(Badge badge) {
+        this.badges.add(badge);
+    }
 
-public void addBadgest(Badge badge) {
-  this.badges.add(badge);
-}
-
-public void removeBadgest(Badge badge) {
-  this.badges.remove(badge);
-}
+    public void removeBadges(Badge badge) {
+        this.badges.remove(badge);
+    }
 
 ////    @OneToMany(mappedBy = "user")
 ////    private List<AvatarImage> avatarImages = new ArrayList<>();
