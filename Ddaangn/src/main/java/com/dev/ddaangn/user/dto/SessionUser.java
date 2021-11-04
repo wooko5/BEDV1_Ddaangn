@@ -1,23 +1,20 @@
-package com.dev.ddaangn.user.config.auth.dto;
+package com.dev.ddaangn.user.dto;
 
 import com.dev.ddaangn.user.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * 직렬화 기능을 가진 User클래스
+ */
 @Getter
-@Setter
-@NoArgsConstructor
 public class SessionUser implements Serializable {
     private String name;
     private String email;
     private String picture;
-    private Long id;
 
-    public SessionUser(User user) {
-        this.id = user.getId();
+    public SessionUser(User user){
         this.name = user.getName();
         this.email = user.getEmail();
         this.picture = user.getPicture();
