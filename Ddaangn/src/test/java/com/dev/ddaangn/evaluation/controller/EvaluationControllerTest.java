@@ -79,13 +79,7 @@ public class EvaluationControllerTest {
 
         LocalDateTime now = LocalDateTime.now();
 
-        session=new MockHttpSession();
 
-        sessionUser=new SessionUser();
-        sessionUser.setId(3L);
-        sessionUser.setEmail("sds1vrk@naver.com");
-
-        session.setAttribute("user",sessionUser);
 
 
         this.mockMvc= MockMvcBuilders
@@ -121,10 +115,10 @@ public class EvaluationControllerTest {
         log.info("[제발제발] name: " + givenUserEntity.getName());
 
 
-        session = new MockHttpSession();
-        sessionUser = new SessionUser();
+        session=new MockHttpSession();
+        sessionUser=new SessionUser();
         sessionUser.setId(givingUserEntity.getId());
-        session.setAttribute("user", sessionUser);
+        session.setAttribute("user",sessionUser);
 
 
         evaluationsDetailEntity1 = evaluationsDetailRepository.save(
@@ -157,7 +151,7 @@ public class EvaluationControllerTest {
     public void 평가하기() throws Exception {
         // GIVEN
         EvaluationInsertRequest requestDto = EvaluationInsertRequest.builder()
-                .evaluatedId(givingUserEntity.getId())
+                .evaluatedId(givenUserEntity.getId())
                 .evaluationDetails(
                         Arrays.asList(
                                 evaluationsDetailEntity1.getId(),
