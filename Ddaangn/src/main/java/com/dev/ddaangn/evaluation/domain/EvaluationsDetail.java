@@ -1,6 +1,7 @@
 package com.dev.ddaangn.evaluation.domain;
 
 import com.dev.ddaangn.common.BaseEntity;
+import com.dev.ddaangn.evaluation.role.EvaluationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,10 +28,10 @@ public class EvaluationsDetail extends BaseEntity {
 
     private Boolean positive;
 
-    //TODO
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
-    private Evaluation evaluation;
+//    TODO
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
+//    private Evaluation evaluation;
 
     @OneToMany(mappedBy = "evaluationsDetail")
     private List<EvaluationMappingDetail> mappingEvaluationEvaluationDetails = new ArrayList<>();
@@ -38,4 +39,5 @@ public class EvaluationsDetail extends BaseEntity {
     public void addMappingEvaluationEvaluationDetail(EvaluationMappingDetail item) {
         mappingEvaluationEvaluationDetails.add(item);
     }
+
 }
