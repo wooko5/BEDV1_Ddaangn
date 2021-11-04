@@ -1,6 +1,5 @@
 package com.dev.ddaangn.badge.service;
 
-import com.dev.ddaangn.badge.BadgeImage;
 import com.dev.ddaangn.badge.dto.BadgeImageDto;
 import com.dev.ddaangn.badge.dto.BadgeRequest;
 import com.dev.ddaangn.badge.dto.BadgeResponse;
@@ -8,24 +7,20 @@ import com.dev.ddaangn.badge.repository.BadgeRepository;
 import com.dev.ddaangn.user.Role;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import com.dev.ddaangn.user.vo.BoughtPosts;
+import com.dev.ddaangn.user.vo.SoldPosts;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@Slf4j
 @SpringBootTest
-@AutoConfigureMockMvc
 class BadgeServiceTest {
 
     @Autowired
@@ -37,45 +32,85 @@ class BadgeServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    private Long id = 1L;
+    private final Long uesrId = 1L;
 
-    private List<BadgeImage> badgeImages = new ArrayList<>();
-
-    private List<BadgeImageDto> badgeImageDtos = new ArrayList<>();
-
-//    private MockMvc mvc;
-//
-//    @Autowired
-//    private WebApplicationContext webApplicationContext;
-
-    @Test
+    @BeforeEach
     void setUp() {
         User user = User.builder()
+                .id(uesrId)
+                .address("myAddress")
                 .name("재욱")
-                .email("yahoo@naver.com")
-                .address("Seoul/Asia")
-                .picture("c:wooko/img12312.png")
-                .phoneNumber("010-6693-1234")
+                .phoneNumber("010-1234-5678")
                 .temperature(36.0)
+                .email("weewe@naver.com")
                 .role(Role.GUEST)
+                .soldPosts(new SoldPosts())
+                .boughtPosts(new BoughtPosts())
                 .build();
         userRepository.save(user);
 
-        BadgeRequest request = BadgeRequest.builder() // Given
-                .name("오늘의 친절상")
-                .description("오늘의 친절상에 대한 상세 설명")
+        BadgeRequest request = BadgeRequest.builder()
+                .name("친절왕")
+                .description("거래 이후에 친절한 당신에게 주는 상")
                 .achievement(true)
-                .badgeImageDto(badgeImageDtos)
                 .userId(user.getId())
+                .badgeImageDto(BadgeImageDto.builder()
+                        .url("image_url")
+                        .type("BADGE")
+                        .createdAt(LocalDateTime.now())
+                        .deletedAt(LocalDateTime.now())
+                        .updateAt(LocalDateTime.now())
+                        .build())
                 .build();
-
-        BadgeResponse savedResponse = badgeService.save(request); // When
-        assertThat(savedResponse.getName()).isEqualTo("오늘의 친절상"); // Then
+        badgeService.save(request);
     }
 
     @AfterEach
     void cleanUp() {
         badgeRepository.deleteAll();
-        userRepository.deleteAll();
     }
+
+    @Test
+    @DisplayName("Badge를 전체 조회할 수 있다")
+    void findAllTest() {
+        List<BadgeResponse> badgeResponses = badgeService.findAll();
+        assertThat(badgeResponses.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Badge를 생성할 수 있다")
+    void insertTest() {
+        User user = User.builder()
+                .address("myAddress")
+                .name("프로그래머스")
+                .phoneNumber("010-9876-5432")
+                .temperature(36.0)
+                .email("programmers@gmail.com")
+                .role(Role.USER)
+                .soldPosts(new SoldPosts())
+                .boughtPosts(new BoughtPosts())
+                .build();
+        userRepository.save(user);
+
+
+        BadgeRequest request = BadgeRequest.builder()
+                .name("불친절왕")
+                .description("거래 이후에 불친절한 당신에게 주는 상")
+                .achievement(false)
+                .userId(user.getId())
+                .badgeImageDto(BadgeImageDto.builder()
+                        .url("image_url")
+                        .type("AVATAR")
+                        .createdAt(LocalDateTime.now())
+                        .deletedAt(LocalDateTime.now())
+                        .updateAt(LocalDateTime.now())
+                        .build())
+                .build();
+
+        BadgeResponse savedBadge = badgeService.save(request);
+        assertThat(savedBadge.getName()).isEqualTo("불친절왕");
+        assertThat(savedBadge.getDescription()).isEqualTo("거래 이후에 불친절한 당신에게 주는 상");
+        assertThat(savedBadge.isAchievement()).isFalse();
+    }
+
 }
