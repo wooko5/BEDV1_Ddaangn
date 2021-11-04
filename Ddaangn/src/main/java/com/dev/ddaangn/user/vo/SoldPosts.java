@@ -21,4 +21,7 @@ public class SoldPosts {
         posts.remove(post);
     }
 
+    public int getSize() {
+        return posts.size();
+    }
 }

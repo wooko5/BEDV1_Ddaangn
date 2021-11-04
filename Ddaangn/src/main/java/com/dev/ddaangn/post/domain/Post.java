@@ -2,12 +2,15 @@ package com.dev.ddaangn.post.domain;
 
 import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.post.converter.PostStatusAttributeConverter;
+import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 
 @NoArgsConstructor
@@ -35,6 +38,10 @@ public class Post extends BaseEntity {
     @Column(name = "views", nullable = false)
     private Long views;
 
+    @Column(name = "is_hidden")
+    @ColumnDefault(value = "0")
+    private boolean isHidden;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private User seller;
@@ -44,7 +51,27 @@ public class Post extends BaseEntity {
     private User buyer;
 
     public void addPost(User user) {
-        this.seller = user;
+        seller = user;
         user.getSoldPosts().addPost(this);
+    }
+
+    public void update(PostUpdateRequest request) {
+        contents = request.getContents();
+        title = request.getTitle();
+    }
+
+    public void updateStatus(PostStatus status) {
+        this.status = status;
+    }
+
+    public void updateBuyer(User buyer) {
+        if (this.buyer != null)
+            this.buyer.getBoughtPosts().deletePost(this);
+        this.buyer = buyer;
+        buyer.getBoughtPosts().addPost(this);
+    }
+
+    public void toggleHidden() {
+        isHidden = !isHidden;
     }
 }
