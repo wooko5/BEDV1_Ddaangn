@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public enum EvaluationList {
     ;
 //    EXCELLENT("매우 만족", "나눔을 해주셨어요","")

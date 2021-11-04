@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class ChatRoomForm {
     private String name;
+    private String sessionName;
 }

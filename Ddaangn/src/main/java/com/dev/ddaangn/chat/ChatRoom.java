@@ -2,6 +2,8 @@ package com.dev.ddaangn.chat;
 
 import com.dev.ddaangn.chat.dto.ChatMessage;
 import com.dev.ddaangn.chat.dto.MessageType;
+import com.dev.ddaangn.user.config.auth.LoginUser;
+import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +33,7 @@ public class ChatRoom {
                               ObjectMapper objectMapper) throws IOException {
         if(chatMessage.getType() == MessageType.ENTER){
             sessions.add(session);
+
             chatMessage.setMessage(chatMessage.getWriter() + "님이 입장하셨습니다.");
         }
         else if(chatMessage.getType() == MessageType.LEAVE){
