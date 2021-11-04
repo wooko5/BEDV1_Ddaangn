@@ -22,7 +22,7 @@ public class BadgeController {
         this.badgeService = badgeService;
     }
 
-    @GetMapping() // 배지 전체 조회
+    @GetMapping // 배지 전체 조회
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<BadgeResponse>> getAll() {
         List<BadgeResponse> all = badgeService.findAll();
