@@ -7,8 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -37,11 +35,12 @@ public class Badge extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "badge_images_id")
     private BadgeImage badgeImage;
 
     public void setUser(User user) {
-        if(Objects.nonNull(this.user)){
+        if (Objects.nonNull(this.user)) {
             this.user.getBadges().remove(this);
         }
         this.user = user;
