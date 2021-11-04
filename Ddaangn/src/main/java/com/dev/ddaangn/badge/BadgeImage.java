@@ -1,7 +1,8 @@
 package com.dev.ddaangn.badge;
 
-import com.dev.ddaangn.image.Image;
+import com.dev.ddaangn.common.Image;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,14 +12,19 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "badge_images")
+@Builder
 public class BadgeImage extends Image {
 
-    @OneToOne(mappedBy = "badgeImage") // BadgeImage - Badge
-    @JoinColumn(name = "badge_id")
-    private Badge badge;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    public BadgeImage(Long id, String url, String type, Badge badge) {
-        super(id, url, type);
-        this.badge = badge;
-    }
+    @Column(name = "url", length = 500)
+    private String url;
+
+    @Column(name = "type", length = 30)
+    private String type;
+
+    @OneToOne(mappedBy = "badgeImage") // BadgeImage - Badge
+    private Badge badge;
 }
