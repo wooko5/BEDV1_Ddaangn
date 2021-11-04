@@ -18,8 +18,16 @@ public class BadgeConverter {
                 .name(request.getName())
                 .description(request.getDescription())
                 .achievement(request.isAchievement())
-                .badgeImage(request.getBadgeImageDto().toEntity())
+                .badgeImage(converterBadgeImage(request.getBadgeImageDto()))
                 .user(user)
+                .build();
+    }
+
+    public BadgeImage converterBadgeImage(BadgeImageDto badgeImageDto){ // Dto -> Entity
+        return  BadgeImage.builder()
+                .id(badgeImageDto.getId())
+                .url(badgeImageDto.getUrl())
+                .type(badgeImageDto.getType())
                 .build();
     }
 }

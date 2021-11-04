@@ -1,16 +1,16 @@
 package com.dev.ddaangn.badge.dto;
 
-import com.dev.ddaangn.badge.BadgeImage;
-import com.dev.ddaangn.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class BadgeImageDto {
     private LocalDateTime createdAt;
@@ -19,14 +19,6 @@ public class BadgeImageDto {
     private Long id;
     private String url;
     private String type;
-
-    public BadgeImage toEntity(){
-        return (BadgeImage)BadgeImage.builder()
-                .id(id)
-                .url(url)
-                .type(type)
-                .build();
-    }
 
     @Override
     public boolean equals(Object o) {
