@@ -84,7 +84,15 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Badge> badges = new ArrayList<>();
 
-//    // User - AvatarImage TODO, Image 상속받고 만들기
+
+public void addBadgest(Badge badge) {
+  this.badges.add(badge);
+}
+
+public void removeBadgest(Badge badge) {
+  this.badges.remove(badge);
+}
+
 ////    @OneToMany(mappedBy = "user")
 ////    private List<AvatarImage> avatarImages = new ArrayList<>();
 //
