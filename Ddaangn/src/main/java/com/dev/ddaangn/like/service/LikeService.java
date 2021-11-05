@@ -1,6 +1,7 @@
 package com.dev.ddaangn.like.service;
 
 import com.dev.ddaangn.common.error.ErrorMessage;
+import com.dev.ddaangn.common.error.exception.ForbiddenException;
 import com.dev.ddaangn.common.error.exception.NotFoundException;
 import com.dev.ddaangn.like.domain.Like;
 import com.dev.ddaangn.like.dto.response.LikeDetailResponse;
@@ -8,6 +9,7 @@ import com.dev.ddaangn.like.repository.LikeRepository;
 import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.repository.PostRepository;
 import com.dev.ddaangn.user.User;
+import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.dev.ddaangn.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +28,11 @@ public class LikeService {
 
     // [PUT] /api/v1/posts/{postId}/likes
     @Transactional
-    public LikeDetailResponse create(Long postId, Long userId) {
-        User user = getUser(userId);
+    public LikeDetailResponse create(Long postId, SessionUser sessionUser) {
+        if (sessionUser == null) {
+            throw new ForbiddenException(ErrorMessage.FORBIDDEN);
+        }
+        User user = getUser(sessionUser.getId());
         Post post = getPost(postId);
 
         Like like = new Like();
@@ -39,9 +44,15 @@ public class LikeService {
 
     // [DELETE] /api/v1/posts/{postId}/likes
     @Transactional
-    public void delete(Long likeId) {
+    public void delete(Long likeId, SessionUser sessionUser) {
+        if (sessionUser == null) {
+            throw new ForbiddenException(ErrorMessage.FORBIDDEN);
+        }
         Like like = likeRepository.findById(likeId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_EXIST_LIKE));
+        if (!sessionUser.getId().equals(like.getUser().getId())) {
+            throw new ForbiddenException(ErrorMessage.FORBIDDEN);
+        }
         like.removeLike();
         likeRepository.deleteById(likeId);
     }

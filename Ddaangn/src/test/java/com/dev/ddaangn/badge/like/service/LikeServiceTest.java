@@ -8,6 +8,7 @@ import com.dev.ddaangn.post.domain.Post;
 import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.repository.PostRepository;
 import com.dev.ddaangn.user.User;
+import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.dev.ddaangn.user.repository.UserRepository;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
@@ -93,8 +94,9 @@ class LikeServiceTest {
         when(likeRepository
                 .save(any()))
                 .thenReturn(stubLikeResult);
+        SessionUser givenSessionUser = new SessionUser(user);
         // WHEN
-        LikeDetailResponse result = likeService.create(givenPostId, givenUserId);
+        LikeDetailResponse result = likeService.create(givenPostId, givenSessionUser);
 
         // THEN
         assertThat(result).isEqualTo(stubLikeResponse);
