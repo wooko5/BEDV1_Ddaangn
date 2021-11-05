@@ -1,0 +1,21 @@
+:hardbreaks:
+ifndef::snippets[]
+:snippets: ../../../target/generated-snippets
+endif::[]
+
+== Badge
+
+=== Badge 작성 (POST "api/v1/badges")
+.Request
+include::{snippets}/badge-save/http-request.adoc[]
+include::{snippets}/badge-save/request-fields.adoc[]
+
+.Response
+include::{snippets}/badge-save/http-response.adoc[]
+include::{snippets}/badge-save/response-fields.adoc[]
+
+=== Badge 전체 조회 (GET "api/v1/badges")
+include::{snippets}/badge-getAll/http-request.adoc[]
+
+.Response
+include::{snippets}/badge-getAll/http-response.adoc[]

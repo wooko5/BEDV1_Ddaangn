@@ -92,7 +92,14 @@ public class User extends BaseEntity {
     public void addEvaluated(Evaluation evaluation) {
         givenEvaluations.add(evaluation);
     }
+  
+    public void addBadges(Badge badge) {
+        this.badges.add(badge);
+    }
 
+    public void removeBadges(Badge badge) {
+        this.badges.remove(badge);
+    }
     public void addEvaluator(Evaluation evaluation) {
         givingEvaluations.add(evaluation);
     }
