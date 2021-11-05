@@ -9,6 +9,6 @@ public class PostInsertRequest {
 
     private Long sellerId;
     private String title;
-    private String content;
+    private String contents;
     // private List<Image> images;
 }
