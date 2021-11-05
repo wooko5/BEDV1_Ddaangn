@@ -1,7 +1,6 @@
 package com.dev.ddaangn.evaluation.domain;
 
 import com.dev.ddaangn.common.BaseEntity;
-import com.dev.ddaangn.evaluation.role.EvaluationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

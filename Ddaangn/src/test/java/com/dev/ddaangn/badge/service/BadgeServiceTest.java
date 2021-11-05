@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class BadgeServiceTest {
 
-    private final Long USER_ID = 1L;
     @Autowired
     private BadgeRepository badgeRepository;
     @Autowired
@@ -37,7 +36,6 @@ class BadgeServiceTest {
     @BeforeEach
     void setUp() {
         User user = User.builder()
-                .id(USER_ID)
                 .address("myAddress")
                 .name("재욱")
                 .phoneNumber("010-1234-5678")
