@@ -1,4 +1,4 @@
-package com.dev.ddaangn.user.dto;
+package com.dev.ddaangn.user.dto.response;
 
 import com.dev.ddaangn.user.User;
 import lombok.Getter;
