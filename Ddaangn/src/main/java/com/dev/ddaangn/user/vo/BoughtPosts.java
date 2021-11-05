@@ -10,7 +10,7 @@ import java.util.List;
 
 @Embeddable
 public class BoughtPosts {
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
     public void addPost(Post post) {

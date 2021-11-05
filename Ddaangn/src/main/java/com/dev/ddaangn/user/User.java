@@ -61,10 +61,10 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Badge> badges = new ArrayList<>();
     // User - Evaluation, 받은 평가
-    @OneToMany(mappedBy = "evaluated", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "evaluated", cascade = CascadeType.ALL)
     private List<Evaluation> givenEvaluations = new ArrayList<>();
     // User가 준 평가
-    @OneToMany(mappedBy = "evaluator", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "evaluator", cascade = CascadeType.ALL)
     private List<Evaluation> givingEvaluations = new ArrayList<>();
     // User - Like
     @OneToMany(mappedBy = "user")
@@ -92,7 +92,7 @@ public class User extends BaseEntity {
     public void addEvaluated(Evaluation evaluation) {
         givenEvaluations.add(evaluation);
     }
-  
+
     public void addBadges(Badge badge) {
         this.badges.add(badge);
     }
@@ -100,6 +100,7 @@ public class User extends BaseEntity {
     public void removeBadges(Badge badge) {
         this.badges.remove(badge);
     }
+
     public void addEvaluator(Evaluation evaluation) {
         givingEvaluations.add(evaluation);
     }

@@ -1,15 +1,12 @@
 package com.dev.ddaangn.badge.controller;
 
-import com.dev.ddaangn.badge.Badge;
-import com.dev.ddaangn.badge.BadgeImage;
 import com.dev.ddaangn.badge.dto.BadgeImageDto;
 import com.dev.ddaangn.badge.dto.BadgeRequest;
-import com.dev.ddaangn.badge.dto.BadgeResponse;
 import com.dev.ddaangn.badge.repository.BadgeRepository;
 import com.dev.ddaangn.badge.service.BadgeService;
-import com.dev.ddaangn.user.Role;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
+import com.dev.ddaangn.user.role.LoginRole;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,15 +23,13 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
@@ -67,7 +62,7 @@ class BadgeControllerTest {
                 .phoneNumber("010-1234-5678")
                 .temperature(36.0)
                 .email("weewe@naver.com")
-                .role(Role.GUEST)
+                .role(LoginRole.GUEST)
                 .soldPosts(new SoldPosts())
                 .boughtPosts(new BoughtPosts())
                 .build();

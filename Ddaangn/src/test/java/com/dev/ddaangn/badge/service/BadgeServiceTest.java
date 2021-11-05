@@ -4,13 +4,16 @@ import com.dev.ddaangn.badge.dto.BadgeImageDto;
 import com.dev.ddaangn.badge.dto.BadgeRequest;
 import com.dev.ddaangn.badge.dto.BadgeResponse;
 import com.dev.ddaangn.badge.repository.BadgeRepository;
-import com.dev.ddaangn.user.Role;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.repository.UserRepository;
+import com.dev.ddaangn.user.role.LoginRole;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,16 +26,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class BadgeServiceTest {
 
+    private final Long USER_ID = 1L;
     @Autowired
     private BadgeRepository badgeRepository;
-
     @Autowired
     private BadgeService badgeService;
-
     @Autowired
     private UserRepository userRepository;
-
-    private final Long USER_ID = 1L;
 
     @BeforeEach
     void setUp() {
@@ -43,7 +43,7 @@ class BadgeServiceTest {
                 .phoneNumber("010-1234-5678")
                 .temperature(36.0)
                 .email("weewe@naver.com")
-                .role(Role.GUEST)
+                .role(LoginRole.GUEST)
                 .soldPosts(new SoldPosts())
                 .boughtPosts(new BoughtPosts())
                 .build();
@@ -86,7 +86,7 @@ class BadgeServiceTest {
                 .phoneNumber("010-9876-5432")
                 .temperature(36.0)
                 .email("programmers@gmail.com")
-                .role(Role.USER)
+                .role(LoginRole.USER)
                 .soldPosts(new SoldPosts())
                 .boughtPosts(new BoughtPosts())
                 .build();
