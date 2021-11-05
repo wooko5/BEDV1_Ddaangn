@@ -40,4 +40,8 @@ public class EvaluationsDetail extends BaseEntity {
         mappingEvaluationEvaluationDetails.add(item);
     }
 
+    public EvaluationsDetail(String description, Boolean positive) {
+        this.description = description;
+        this.positive = positive;
+    }
 }

@@ -5,7 +5,6 @@ spring:
     username: dev
     password: dev
 
-
   jpa:
     generate-ddl: true
     database: mysql
@@ -16,6 +15,8 @@ spring:
         hbm2ddl:
           query.in_clause_parameter_padding: true
           auto: create
+
+
 
   profiles:
     include: oauth
