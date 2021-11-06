@@ -107,7 +107,7 @@ public class EvaluationControllerInstanceTest {
 
     // Detail List 조회하기
     @Test
-    @DisplayName("미리 만들어져있는 Detail List 조회하기")
+    @DisplayName("[GET] /api/v1/evaluations/details")
     public void DetailList조회하기() throws Exception {
         // GIVEN
 
@@ -164,7 +164,7 @@ public class EvaluationControllerInstanceTest {
 
     // 평가해보기
     @Test
-    @DisplayName("Session 계정으로 User 평가하기")
+    @DisplayName("[POST] /api/v1/evaluations")
     @WithMockUser(roles = "USER")
     public void 평가하기() throws Exception {
         // GIVEN
