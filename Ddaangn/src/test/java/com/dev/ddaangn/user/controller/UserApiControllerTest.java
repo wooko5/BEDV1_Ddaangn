@@ -68,7 +68,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@ExtendWith({RestDocumentationExtension.class})
 public class UserApiControllerTest {
 
     private final Double USER_TEMPERATURE = 36.0;

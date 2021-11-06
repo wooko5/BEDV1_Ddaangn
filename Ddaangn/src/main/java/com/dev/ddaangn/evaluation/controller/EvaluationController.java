@@ -2,12 +2,16 @@ package com.dev.ddaangn.evaluation.controller;
 
 import com.dev.ddaangn.common.api.ApiResponse;
 import com.dev.ddaangn.evaluation.dto.request.EvaluationInsertRequest;
+import com.dev.ddaangn.evaluation.dto.response.EvaluationDetailResponse;
 import com.dev.ddaangn.evaluation.dto.response.EvaluationMappingDetailResponse;
 import com.dev.ddaangn.evaluation.service.EvaluationService;
 import com.dev.ddaangn.user.config.auth.LoginUser;
 import com.dev.ddaangn.user.config.auth.dto.SessionUser;
+import com.dev.ddaangn.user.dto.response.UserDetailResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,10 +30,10 @@ public class EvaluationController {
             return ApiResponse.ok(evaluationService.createEvaluation(request, user));
     }
 
-//    @GetMapping("/details")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ApiResponse<Pageable<EvaluationDetailResponse>> findAll() {
-//        return ApiResponse.ok(evaluationService.getEvaluationsDetails(Pageable pageable));
-//    }
+
+    @GetMapping("/details")
+    public ApiResponse<Page<EvaluationDetailResponse>> getAll(Pageable pageable) {
+        return ApiResponse.ok(evaluationService.findAll(pageable));
+    }
 
 }
