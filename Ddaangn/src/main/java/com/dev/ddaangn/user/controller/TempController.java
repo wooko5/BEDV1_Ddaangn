@@ -36,7 +36,6 @@ public class TempController {
     public ApiResponse<TempSaveResponseDto> select(@PathVariable Long id, @LoginUser SessionUser user) {
         if (user != null) {
 //            model.addAttribute("userName", user.getName());
-            System.err.println("IDDD"+user.getId());
             return ApiResponse.ok(tempService.findById(id));
         }
         return ApiResponse.fail(tempService.findById(id));
