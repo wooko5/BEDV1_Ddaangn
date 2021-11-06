@@ -1,6 +1,7 @@
 package com.dev.ddaangn.post.domain;
 
 import com.dev.ddaangn.common.BaseEntity;
+import com.dev.ddaangn.like.domain.Like;
 import com.dev.ddaangn.post.converter.PostStatusAttributeConverter;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.user.User;
@@ -12,6 +13,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,6 +53,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "buyer_id", referencedColumnName = "id")
     private User buyer;
 
+    @OneToMany(mappedBy = "post")
+    private List<Like> likes = new ArrayList<>();
+
     public void addPost(User user) {
         seller = user;
         user.getSoldPosts().addPost(this);
@@ -73,5 +79,13 @@ public class Post extends BaseEntity {
 
     public void toggleHidden() {
         isHidden = !isHidden;
+    }
+
+    public void addLike(Like like) {
+        likes.add(like);
+    }
+
+    public void removeLike(Like like) {
+        likes.remove(like);
     }
 }

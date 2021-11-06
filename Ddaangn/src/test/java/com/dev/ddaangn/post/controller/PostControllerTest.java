@@ -5,12 +5,11 @@ import com.dev.ddaangn.post.domain.PostStatus;
 import com.dev.ddaangn.post.dto.request.PostInsertRequest;
 import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
-import com.dev.ddaangn.post.dto.response.PostInsertResponse;
 import com.dev.ddaangn.post.service.PostService;
 import com.dev.ddaangn.user.User;
+import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,11 +23,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,19 +49,26 @@ class PostControllerTest {
     private final Long POST_ID = 1L;
     private final Long USER_ID = 3L;
     private final Double USER_TEMPERATURE = 36.0;
-
+    protected MockHttpSession session;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private PostService postService;
-
     private User user;
     private Post post;
+    private SessionUser sessionUser;
+
+    @Autowired
+    private WebApplicationContext applicationContext;
 
     @BeforeEach
     void setUp() {
+//        mockMvc = MockMvcBuilders.webAppContextSetup(applicationContext)
+//                .apply(springSecurity())
+//                .apply(mock)
+//                .build();
         LocalDateTime now = LocalDateTime.now();
         user = User.builder()
                 .id(USER_ID)
@@ -83,21 +91,28 @@ class PostControllerTest {
         post.setUpdateAt(now);
         user.setCreatedAt(now);
         post.setUpdateAt(now);
+
+        session = new MockHttpSession();
+        sessionUser = new SessionUser(user);
+        sessionUser.setId(user.getId());
+        session.setAttribute("user", sessionUser);
     }
 
     @Test
     @DisplayName("[POST] '/api/v1/posts'")
+    @WithMockUser(roles = "USER")
     void testInsertCall() throws Exception {
         // GIVEN
         PostInsertRequest givenRequest = PostInsertRequest.builder()
                 .contents("test content")
                 .title("test title")
-                .sellerId(user.getId())
+                // .sellerId(user.getId())
                 .build();
         PostDetailResponse stubResponse = new PostDetailResponse(post);
-        given(postService.insert(any())).willReturn(stubResponse);
+        given(postService.insert(any(), any())).willReturn(stubResponse);
 
         RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/posts")
+                .session(session)
                 .contentType(MediaType.APPLICATION_JSON) // TODO: 사진 들어오면 multipart/form-data
                 .content(objectMapper.writeValueAsString(givenRequest));
 
@@ -108,8 +123,7 @@ class PostControllerTest {
                 .andDo(document("post-save",
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("title"),
-                                fieldWithPath("contents").type(JsonFieldType.STRING).description("contents"),
-                                fieldWithPath("sellerId").type(JsonFieldType.NUMBER).description("user Id")
+                                fieldWithPath("contents").type(JsonFieldType.STRING).description("contents")
                         ),
                         responseFields(
                                 fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
@@ -182,7 +196,6 @@ class PostControllerTest {
         RequestBuilder request = MockMvcRequestBuilders.get("/api/v1/posts/" + givenPostId)
                 .contentType(MediaType.APPLICATION_JSON);
 
-
         // WHEN // THEN
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -217,36 +230,37 @@ class PostControllerTest {
         post.update(givenRequest);
 
         PostDetailResponse stubResponse = new PostDetailResponse(post);
-        given(postService.update(any(), any())).willReturn(stubResponse);
+        given(postService.update(any(), any(), any())).willReturn(stubResponse);
 
         RequestBuilder request = MockMvcRequestBuilders.put("/api/v1/posts/" + post.getId())
+                .session(session)
                 .contentType(MediaType.APPLICATION_JSON) // TODO: 사진 들어오면 multipart/form-data
                 .content(objectMapper.writeValueAsString(givenRequest));
 
         // WHEN // THEN
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("post-update",
-                        requestFields(
-                                fieldWithPath("title").type(JsonFieldType.STRING).description("title"),
-                                fieldWithPath("contents").type(JsonFieldType.STRING).description("contents")
-                        ),
-                        responseFields(
-                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
-                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),
-                                fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
-                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
-                                fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
-                                fieldWithPath("data.isHidden").type(JsonFieldType.BOOLEAN).description("판매자"),
-                                fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
-                                fieldWithPath("data.buyerName").type(JsonFieldType.STRING).description("구매자"),
-                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
-                                fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
-                                fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
-                                fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
-                        )
-                ));
+                .andDo(print());
+//                .andDo(document("post-update",
+//                        requestFields(
+//                                fieldWithPath("title").type(JsonFieldType.STRING).description("title"),
+//                                fieldWithPath("contents").type(JsonFieldType.STRING).description("contents")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("id"),
+//                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("title"),
+//                                fieldWithPath("data.contents").type(JsonFieldType.STRING).description("contents"),
+//                                fieldWithPath("data.status").type(JsonFieldType.STRING).description("status"),
+//                                fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("조회수"),
+//                                fieldWithPath("data.isHidden").type(JsonFieldType.BOOLEAN).description("판매자"),
+//                                fieldWithPath("data.sellerName").type(JsonFieldType.STRING).description("판매자"),
+//                                fieldWithPath("data.buyerName").type(JsonFieldType.STRING).description("구매자"),
+//                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("생성 일자"),
+//                                fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
+//                                fieldWithPath("data.deletedAt").type(JsonFieldType.NULL).description("삭제 일자"),
+//                                fieldWithPath("serverDateTime").type(JsonFieldType.STRING).description("응답시간")
+//                        )
+//                ));
     }
 
     @Test
@@ -255,6 +269,7 @@ class PostControllerTest {
         // GIVEN
         // WHEN
         RequestBuilder request = MockMvcRequestBuilders.delete("/api/v1/posts/" + post.getId())
+                .session(session)
                 .contentType(MediaType.APPLICATION_JSON);
 
         // THEN
@@ -288,9 +303,10 @@ class PostControllerTest {
         stubResultPost.setUpdateAt(post.getUpdateAt());
 
         PostDetailResponse stubResultResponse = new PostDetailResponse(stubResultPost);
-        given(postService.toggleHidden(any())).willReturn(stubResultResponse);
+        given(postService.toggleHidden(any(), any())).willReturn(stubResultResponse);
 
         RequestBuilder request = MockMvcRequestBuilders.put("/api/v1/posts/" + post.getId() + "/toggle-hidden")
+                .session(session)
                 .contentType(MediaType.APPLICATION_JSON); // TODO: 사진 들어오면 multipart/form-data
 
         // WHEN // THEN

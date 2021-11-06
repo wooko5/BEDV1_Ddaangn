@@ -10,6 +10,7 @@ import com.dev.ddaangn.post.dto.request.PostUpdateRequest;
 import com.dev.ddaangn.post.dto.response.PostDetailResponse;
 import com.dev.ddaangn.post.repository.PostRepository;
 import com.dev.ddaangn.user.User;
+import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.dev.ddaangn.user.repository.UserRepository;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
@@ -72,7 +73,6 @@ class PostServiceTest {
         PostInsertRequest givenRequest = PostInsertRequest.builder()
                 .contents("test content")
                 .title("test title")
-                .sellerId(user.getId())
                 .build();
         Post postStub = Post.builder()
                 .title(givenRequest.getTitle())
@@ -90,6 +90,8 @@ class PostServiceTest {
                 .seller(user)
                 .isHidden(false)
                 .build();
+
+        SessionUser givenSessionUser = new SessionUser(user);
         insertedPostStub.setCreatedAt(LocalDateTime.now());
         insertedPostStub.setUpdateAt(LocalDateTime.now());
         when(postConverter
@@ -98,19 +100,19 @@ class PostServiceTest {
                 .thenReturn(postStub);
         when(userRepository
                 .findById(
-                        givenRequest.getSellerId()
+                        user.getId()
                 ))
                 .thenReturn(Optional.of(user));
         when(postRepository.save(postStub)).thenReturn(insertedPostStub);
         PostDetailResponse givenResult = new PostDetailResponse(insertedPostStub);
         // WHEN
-        PostDetailResponse result = postService.insert(givenRequest);
+        PostDetailResponse result = postService.insert(givenRequest, givenSessionUser);
 
         // THEN
         assertThat(result).isEqualTo(givenResult);
         assertThat(result.getIsHidden()).isFalse();
         verify(postConverter).insertRequestDtoToEntity(givenRequest, user);
-        verify(userRepository).findById(givenRequest.getSellerId());
+        verify(userRepository).findById(user.getId());
         verify(postRepository).save(postStub);
     }
 
@@ -204,6 +206,9 @@ class PostServiceTest {
                 .seller(user)
                 .isHidden(true)
                 .build();
+
+        SessionUser givenSessionUser = new SessionUser(user);
+
         stubOriginPostEntity.setCreatedAt(LocalDateTime.now());
         stubOriginPostEntity.setUpdateAt(LocalDateTime.now());
 
@@ -223,7 +228,7 @@ class PostServiceTest {
         when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
 
         // WHEN
-        PostDetailResponse result = postService.update(POST_ID, givenRequest);
+        PostDetailResponse result = postService.update(POST_ID, givenRequest, givenSessionUser);
 
         // THEN
         assertThat(result).isEqualTo(stubResponseDto);
@@ -235,12 +240,25 @@ class PostServiceTest {
     @DisplayName("Post를 id로 삭제할 수 있다.")
     void testDelete() {
         // GIVEN
-        when(postRepository.existsById(any())).thenReturn(true);
+        Post postStub = Post.builder()
+                .id(POST_ID)
+                .title("test title")
+                .contents("test contents")
+                .status(PostStatus.SELLING)
+                .views(INIT_POST_VIEWS)
+                .seller(user)
+                .isHidden(true)
+                .build();
+
+        SessionUser givenSessionUser = new SessionUser(user);
+        when(postRepository.findById(POST_ID)).thenReturn(Optional.of(postStub));
+
         // WHEN
-        postService.delete(POST_ID);
+        postService.delete(POST_ID, givenSessionUser);
         // THEN
-        verify(postRepository).existsById(POST_ID);
-        verify(postRepository).deleteById(POST_ID);
+
+        verify(postRepository).findById(POST_ID);
+        verify(postRepository).delete(postStub);
     }
 
     @Test
@@ -290,9 +308,10 @@ class PostServiceTest {
         PostDetailResponse stubResponseDto = new PostDetailResponse(stubUpdatedPostEntity);
         when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
         when(userRepository.findById(any())).thenReturn(Optional.of(buyer));
+        SessionUser givenSessionUser = new SessionUser(user);
 
         // WHEN
-        PostDetailResponse result = postService.updateStatus(POST_ID, givenRequest);
+        PostDetailResponse result = postService.updateStatus(POST_ID, givenRequest, givenSessionUser);
 
         // THEN
         assertThat(result).isEqualTo(stubResponseDto);
@@ -319,9 +338,10 @@ class PostServiceTest {
                 .build();
         PostDetailResponse resultStub = new PostDetailResponse(stubOriginPostEntity);
         when(postRepository.findById(any())).thenReturn(Optional.of(stubOriginPostEntity));
+        SessionUser givenSessionUser = new SessionUser(user);
 
         // WHEN
-        PostDetailResponse result = postService.toggleHidden(POST_ID);
+        PostDetailResponse result = postService.toggleHidden(POST_ID, givenSessionUser);
 
         // THEN
         assertThat(result.getIsHidden()).isEqualTo(!resultStub.getIsHidden());
