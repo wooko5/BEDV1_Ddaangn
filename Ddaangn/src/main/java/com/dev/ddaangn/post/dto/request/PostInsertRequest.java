@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class PostInsertRequest {
 
-    private Long sellerId;
+    //    private Long sellerId;
     private String title;
     private String contents;
     // private List<Image> images;

@@ -4,7 +4,7 @@ package com.dev.ddaangn.user;
 import com.dev.ddaangn.badge.Badge;
 import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.evaluation.domain.Evaluation;
-import com.dev.ddaangn.like.Like;
+import com.dev.ddaangn.like.domain.Like;
 import com.dev.ddaangn.user.role.LoginRole;
 import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
@@ -103,5 +103,13 @@ public class User extends BaseEntity {
 
     public void addEvaluator(Evaluation evaluation) {
         givingEvaluations.add(evaluation);
+    }
+
+    public void addLike(Like like) {
+        likes.add(like);
+    }
+
+    public void removeLike(Like like) {
+        likes.remove(like);
     }
 }

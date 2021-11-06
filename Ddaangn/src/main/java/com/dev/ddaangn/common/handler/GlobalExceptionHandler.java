@@ -2,6 +2,7 @@ package com.dev.ddaangn.common.handler;
 
 import com.dev.ddaangn.common.api.ApiResponse;
 import com.dev.ddaangn.common.error.ErrorMessage;
+import com.dev.ddaangn.common.error.exception.ForbiddenException;
 import com.dev.ddaangn.common.error.exception.InvalidMediaTypeException;
 import com.dev.ddaangn.common.error.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     private ApiResponse<String> handleInternalServerErrorException(Exception exception) {
+        return ApiResponse.fail(exception.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    private ApiResponse<String> handleForbiddenException(Exception exception) {
         return ApiResponse.fail(exception.getMessage());
     }
 
