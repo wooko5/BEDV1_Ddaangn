@@ -3,8 +3,8 @@ package com.dev.ddaangn.user.controller;
 import com.dev.ddaangn.common.api.ApiResponse;
 import com.dev.ddaangn.user.config.auth.LoginUser;
 import com.dev.ddaangn.user.config.auth.dto.SessionUser;
-import com.dev.ddaangn.user.dto.ListResponseDto;
-import com.dev.ddaangn.user.dto.TempSaveResponseDto;
+import com.dev.ddaangn.user.dto.response.ListResponseDto;
+import com.dev.ddaangn.user.dto.response.TempSaveResponseDto;
 import com.dev.ddaangn.user.service.TempService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,6 @@ public class TempController {
     public ApiResponse<TempSaveResponseDto> select(@PathVariable Long id, @LoginUser SessionUser user) {
         if (user != null) {
 //            model.addAttribute("userName", user.getName());
-            System.err.println("IDDD"+user.getId());
             return ApiResponse.ok(tempService.findById(id));
         }
         return ApiResponse.fail(tempService.findById(id));

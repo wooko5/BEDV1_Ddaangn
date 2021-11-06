@@ -20,11 +20,17 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> ok(T data) {
+        String message="save";
+
         return new ApiResponse<>(data);
     }
 
     public static <T> ApiResponse<T> fail(T data) {
         return new ApiResponse<>(data);
     }
+
+
+
+
 
 }

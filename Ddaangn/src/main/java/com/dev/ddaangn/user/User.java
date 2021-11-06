@@ -4,6 +4,7 @@ package com.dev.ddaangn.user;
 import com.dev.ddaangn.badge.Badge;
 import com.dev.ddaangn.common.BaseEntity;
 import com.dev.ddaangn.evaluation.domain.Evaluation;
+import com.dev.ddaangn.user.dto.request.UserUpdateRequestDto;
 import com.dev.ddaangn.like.domain.Like;
 import com.dev.ddaangn.user.role.LoginRole;
 import com.dev.ddaangn.user.vo.BoughtPosts;
@@ -81,9 +82,16 @@ public class User extends BaseEntity {
     public User update(String name, String picture) {
         this.name = name;
         this.picture = picture;
-
         return this;
     }
+
+    public User updatedRequestDto(UserUpdateRequestDto updateRequestDto) {
+        this.name = updateRequestDto.getName();
+        this.picture = updateRequestDto.getPicture();
+        return this;
+    }
+
+
 
     public String getRoleKey() {
         return this.role.getKey();

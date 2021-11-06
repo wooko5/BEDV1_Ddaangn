@@ -15,7 +15,7 @@ spring:
       hibernate:
         hbm2ddl:
           query.in_clause_parameter_padding: true
-  #          auto: create
+          auto: create
 
   profiles:
     include: oauth

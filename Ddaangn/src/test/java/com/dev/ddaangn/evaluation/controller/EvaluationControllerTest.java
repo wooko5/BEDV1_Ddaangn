@@ -3,6 +3,7 @@ package com.dev.ddaangn.evaluation.controller;
 import com.dev.ddaangn.evaluation.domain.EvaluationsDetail;
 import com.dev.ddaangn.evaluation.dto.request.EvaluationInsertRequest;
 import com.dev.ddaangn.evaluation.repository.EvaluationsDetailRepository;
+import com.dev.ddaangn.evaluation.role.EvaluationStatus;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.dev.ddaangn.user.repository.UserRepository;
@@ -11,10 +12,12 @@ import com.dev.ddaangn.user.vo.BoughtPosts;
 import com.dev.ddaangn.user.vo.SoldPosts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +30,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -37,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Slf4j
 @AutoConfigureMockMvc
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class EvaluationControllerTest {
 
@@ -72,17 +75,25 @@ public class EvaluationControllerTest {
 
     private SessionUser sessionUser;
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
 
         LocalDateTime now = LocalDateTime.now();
 
 
-        this.mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
+//        this.mockMvc = MockMvcBuilders
+//                .webAppContextSetup(context)
+//                .apply(springSecurity())
+//                .build();
+
+        // mock 한글깨짐 방지
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
+                .alwaysDo(print())
                 .build();
+
+
 
         givingUser = User.builder()
                 // .id(GIVING_ID)
@@ -147,6 +158,7 @@ public class EvaluationControllerTest {
         // GIVEN
         EvaluationInsertRequest requestDto = EvaluationInsertRequest.builder()
                 .evaluatedId(givenUserEntity.getId())
+                .evaluation(String.valueOf(EvaluationStatus.GOOD))
                 .evaluationDetails(
                         Arrays.asList(
                                 evaluationsDetailEntity1.getId(),

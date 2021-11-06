@@ -6,19 +6,26 @@ import com.dev.ddaangn.evaluation.domain.Evaluation;
 import com.dev.ddaangn.evaluation.domain.EvaluationMappingDetail;
 import com.dev.ddaangn.evaluation.domain.EvaluationsDetail;
 import com.dev.ddaangn.evaluation.dto.request.EvaluationInsertRequest;
+import com.dev.ddaangn.evaluation.dto.response.EvaluationDetailResponse;
 import com.dev.ddaangn.evaluation.dto.response.EvaluationMappingDetailResponse;
 import com.dev.ddaangn.evaluation.repository.EvaluationMappingDetailRepository;
 import com.dev.ddaangn.evaluation.repository.EvaluationRepository;
 import com.dev.ddaangn.evaluation.repository.EvaluationsDetailRepository;
+import com.dev.ddaangn.evaluation.role.EvaluationStatus;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.config.auth.dto.SessionUser;
+import com.dev.ddaangn.user.dto.response.UserDetailResponse;
 import com.dev.ddaangn.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.dev.ddaangn.evaluation.role.EvaluationStatus.EXCELLENT;
 
 
 @Service
@@ -35,11 +42,32 @@ public class EvaluationService {
         // 1. User찾고
         User evaluator = getUser(sessionUser.getId());
         User evaluated = getUser(request.getEvaluatedId());
+        String evaluate=request.getEvaluation();
 
         // 2. Evaluation Entity
-        Evaluation evaluation = request.insertRequestDtoToEntity(evaluator, evaluated);
+        Evaluation evaluation = request.insertRequestDtoToEntity(evaluator, evaluated,evaluate);
         // 3. EvaluationDetails 찾고
         // 4. evaluation이랑 List<> detail에 대해 mappingEvaluationEvaluationDetail 엔티티들 만들기.
+
+        // 온도 수정
+        String evaluations=request.getEvaluation();
+        EvaluationStatus evaluationStatus= EvaluationStatus.valueOf(evaluations);
+        switch (evaluationStatus) {
+            case EXCELLENT:
+                evaluated.setTemperature(evaluated.getTemperature()+1);
+                break;
+
+            case GOOD:
+                evaluated.setTemperature(evaluated.getTemperature()+0.5);
+                break;
+
+            case BAD:
+                evaluated.setTemperature(evaluated.getTemperature()-0.5);
+                break;
+        }
+
+
+
         return getEvaluationsDetail(request.getEvaluationDetails()).stream().map(detail ->
                 mappingEvaluationEvaluationDetailRepository.save(
                         EvaluationMappingDetail.builder()
@@ -60,5 +88,19 @@ public class EvaluationService {
         // TODO: 없는 ID에 대해서는 어떡하게?
         return evaluationsDetailRepository.findAllById(detailIds);
     }
+
+//    @Transactional
+//    public Pageable<EvaluationDetailResponse> getEvaluationsDetails(Pageable pageable) {
+//        return evaluationsDetailRepository.findAll();
+//    }
+
+    @Transactional
+    public Page<EvaluationDetailResponse> findAll(Pageable pageable) {
+        return evaluationsDetailRepository.findAll(pageable)
+                .map(EvaluationDetailResponse::new);
+    }
+
+
+
 
 }

@@ -27,15 +27,20 @@ public class EvaluationsDetail extends BaseEntity {
 
     private Boolean positive;
 
-    //TODO
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
-    private Evaluation evaluation;
+//    TODO
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
+//    private Evaluation evaluation;
 
     @OneToMany(mappedBy = "evaluationsDetail")
     private List<EvaluationMappingDetail> mappingEvaluationEvaluationDetails = new ArrayList<>();
 
     public void addMappingEvaluationEvaluationDetail(EvaluationMappingDetail item) {
         mappingEvaluationEvaluationDetails.add(item);
+    }
+
+    public EvaluationsDetail(String description, Boolean positive) {
+        this.description = description;
+        this.positive = positive;
     }
 }

@@ -56,7 +56,6 @@ class BadgeControllerTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .id(1L)
                 .address("myAddress")
                 .name("재욱")
                 .phoneNumber("010-1234-5678")
