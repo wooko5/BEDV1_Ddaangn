@@ -1,6 +1,7 @@
 package com.dev.ddaangn.chat.repository;
 
 import com.dev.ddaangn.chat.ChatRoom;
+import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -25,9 +26,15 @@ public class ChatRoomRepository {
         return chatRoomMap.get(id);
     }
 
-    public ChatRoom createChatRoom(String name){
-        ChatRoom chatRoom = ChatRoom.create(name);
+    public ChatRoom createChatRoom(String chatName, SessionUser user){
+        ChatRoom chatRoom = ChatRoom.create(chatName,user.getName());
         chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }
+
+//    public ChatRoom createChatRoom(String chatName,String name){
+//        ChatRoom chatRoom = ChatRoom.create(chatName,name);
+//        chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
+//        return chatRoom;
+//    }
 }

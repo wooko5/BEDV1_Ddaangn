@@ -28,6 +28,7 @@ public class ChatController {
     @GetMapping("/rooms/{id}")
     public String room(@PathVariable String id, Model model,@LoginUser SessionUser user){
         ChatRoom room = chatRoomRepository.findRoomById(id);
+//        ChatRoom room = chatRoomRepository.findRoomById(user.getName());
         model.addAttribute("room",room);
         return "room";
     }
@@ -41,8 +42,7 @@ public class ChatController {
 
     @PostMapping("/room/new")
     public String makeRoom(ChatRoomForm form,@LoginUser SessionUser user){
-        chatRoomRepository.createChatRoom(form.getName());
-
+        chatRoomRepository.createChatRoom(form.getName(),user);
         return "redirect:/test/room";
     }
 

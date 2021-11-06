@@ -3,6 +3,7 @@ package com.dev.ddaangn.evaluation.controller;
 import com.dev.ddaangn.evaluation.domain.EvaluationsDetail;
 import com.dev.ddaangn.evaluation.dto.request.EvaluationInsertRequest;
 import com.dev.ddaangn.evaluation.repository.EvaluationsDetailRepository;
+import com.dev.ddaangn.evaluation.role.EvaluationStatus;
 import com.dev.ddaangn.user.User;
 import com.dev.ddaangn.user.config.auth.dto.SessionUser;
 import com.dev.ddaangn.user.repository.UserRepository;
@@ -157,6 +158,7 @@ public class EvaluationControllerTest {
         // GIVEN
         EvaluationInsertRequest requestDto = EvaluationInsertRequest.builder()
                 .evaluatedId(givenUserEntity.getId())
+                .evaluation(String.valueOf(EvaluationStatus.GOOD))
                 .evaluationDetails(
                         Arrays.asList(
                                 evaluationsDetailEntity1.getId(),
