@@ -166,7 +166,7 @@ docker-compose up -d # 개발 환경 도커 셋팅
 
 ## 프로젝트 전체 구조
 
-![image-20211106204606614](C:\Users\seo\AppData\Roaming\Typora\typora-user-images\image-20211106204607636.png)
+![image-20211106210006939](https://raw.githubusercontent.com/prgrms-be-devcourse/BEDV1_Ddaangn/main/img/image-20211106210006939.png)
 
 <hr/>
 
